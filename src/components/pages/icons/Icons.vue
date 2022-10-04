@@ -1,22 +1,35 @@
 <template>
   <div class="icons">
-    {{ icons }}
-    <input type="file" @change="upload">
+    <base-upload-images
+        v-model="icons"
+        only-emit
+        @input="handleInputIcons"
+        @delete="handleDeleteIcon"
+    />
   </div>
 </template>
 
 <script>
 import iconsMixin from "@/store/icons/icons.mixin";
+import BaseUploadImages from "@/components/common/BaseUploadImages";
 
 export default {
   name: 'icons',
   mixins: [iconsMixin],
-  created() {
-    this.getIcons()
+  components: { BaseUploadImages },
+  async created() {
+    await this.getIcons()
   },
   methods: {
-    upload($event) {
-      this.uploadIcon($event.target.files[0])
+    async handleInputIcons(files) {
+      const promises = []
+      Array.from(files).forEach(file => {
+        promises.push(this.uploadIcon(file))
+      })
+      await Promise.all(promises)
+    },
+    handleDeleteIcon(icon) {
+      this.deleteIcon(icon.filename)
     }
   }
 }
@@ -24,6 +37,6 @@ export default {
 
 <style lang="scss" scoped>
 .icons {
-
+  padding: 10px;
 }
 </style>
