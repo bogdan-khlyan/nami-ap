@@ -1,3 +1,4 @@
 export const links = [
-    { title: 'Главная', icon: 'HomeFilled', to: '/products' },
+    { title: 'Продукты', icon: 'goods', to: '/products' },
+    { title: 'Иконки', icon: 'grid', to: '/icons' },
 ]
