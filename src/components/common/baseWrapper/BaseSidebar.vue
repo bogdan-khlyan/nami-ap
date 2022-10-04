@@ -53,7 +53,7 @@ export default {
 <style lang="scss" scoped>
 .base-sidebar {
   position: fixed;
-  width: 220px;
+  width: 230px;
   min-height: calc(100vh - 56px);
   :deep(.el-menu-item) {
     .el-icon {

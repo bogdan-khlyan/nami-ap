@@ -14,6 +14,9 @@ export default {
         },
         uploadIcon(file) {
             return iconsStore.uploadIcon(file)
-        }
+        },
+        deleteIcon(filename) {
+            return iconsStore.deleteIcon(filename)
+        },
     }
 }
