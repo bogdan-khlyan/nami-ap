@@ -18,6 +18,11 @@
             :value="item._id"
         />
       </el-select>
+      <el-button
+          class="products__header--btn"
+          type="primary" icon="plus"
+          @click="$router.push('/products/create')"
+      >Добавить продукт</el-button>
     </div>
     <div class="products__table">
       <el-table
@@ -44,7 +49,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column width="220">
+        <el-table-column width="80">
           <template #default="scope">
             <el-button
                 type="primary" icon="edit"
@@ -116,9 +121,14 @@ export default {
   padding: 10px;
   &__header {
     margin-bottom: 10px;
+    display: flex;
+    width: 100%;
     :deep(.el-input) {
       width: 300px;
       margin-right: 10px;
+    }
+    &--btn {
+      margin-left: auto;
     }
   }
 }

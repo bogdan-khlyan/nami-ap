@@ -9,8 +9,19 @@ export default defineStore({
     actions: {
         async getProducts() {
             const response = await axios.get('/api/admin/products')
-            this.products = response.data.products
-            return response.data.products
+            this.products = response.data.products.map(item => ({
+                ...item,
+                images: item.images.map(image => `/api/product/image/${image}`)
+            }))
+            return this.products
+        },
+        createProduct(type, product) {
+            if (type === 'SINGLE') {
+                return this.createSingleProduct(product)
+            }
+        },
+        async createSingleProduct(product) {
+            const response = await axios.post(`/api/admin/product/SINGLE`, product)
         },
         updateProduct(id, type, product) {
             if (type === 'SINGLE') {
