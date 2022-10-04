@@ -15,6 +15,10 @@ const routes = [{
     path: '/products/:productId',
     name: 'product',
     component: () => import('@/components/pages/productEditor/ProductEditor')
+  }, {
+    path: '/icons',
+    name: 'icons',
+    component: () => import('@/components/pages/icons/Icons')
   }]
 }]
 
