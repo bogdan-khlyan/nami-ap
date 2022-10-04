@@ -1,5 +1,5 @@
 <template>
-  <label class="base-label" :class="[type, { error: isError }]" ref="root">
+  <component :is="tag" class="base-label" :class="[type, { error: isError }]" ref="root">
     <span class="label">{{ label }}</span>
     <span class="base-label__content">
       <slot/>
@@ -7,7 +7,7 @@
         <span v-if="isError && errorMessage" class="base-label__error-message">{{errorMessage}}</span>
       </el-collapse-transition>
     </span>
-  </label>
+  </component>
 </template>
 
 <script>
@@ -18,7 +18,8 @@ export default {
   props: {
     type: { type: String, default: null },
     label: { type: String, default: null },
-    validator: { type: Object }
+    validator: { type: Object },
+    tag: { type: String, default: 'label' }
   },
   computed: {
     isError() {
