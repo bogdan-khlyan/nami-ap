@@ -7,5 +7,10 @@ export default {
         categories() {
             return categoriesStore.categories
         }
+    },
+    methods: {
+        getCategories() {
+            return categoriesStore.getCategories()
+        }
     }
 }
