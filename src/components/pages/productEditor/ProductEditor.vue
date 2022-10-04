@@ -141,7 +141,7 @@ export default {
       if (!this.v$.$error) {
         if (this.isCreate) {
           if (this.product.type === 'SINGLE') {
-            this.createProduct('SINGLE', {
+            const created = await this.createProduct('SINGLE', {
               title: this.product.title,
               description: this.product.description,
               cost: this.product.cost,
@@ -149,6 +149,20 @@ export default {
               ingredients: this.product.ingredients,
               visible: false
             })
+            await this.updateCategoriesProduct(created._id, this.product.categories)
+            this.$router.push(`/products/${created._id}`)
+          }
+        } else {
+          if (this.product.type === 'SINGLE') {
+            this.updateProduct(this.product._id, 'SINGLE', {
+              title: this.product.title,
+              description: this.product.description,
+              cost: this.product.cost,
+              weight: this.product.weight,
+              ingredients: this.product.ingredients,
+              visible: this.product.visible
+            })
+            this.updateCategoriesProduct(this.product._id, this.product.categories)
           }
         }
       }

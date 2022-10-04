@@ -22,6 +22,7 @@ export default defineStore({
         },
         async createSingleProduct(product) {
             const response = await axios.post(`/api/admin/product/SINGLE`, product)
+            return response.data.product
         },
         updateProduct(id, type, product) {
             if (type === 'SINGLE') {

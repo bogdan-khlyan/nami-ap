@@ -11,6 +11,9 @@ export default {
     methods: {
         getCategories() {
             return categoriesStore.getCategories()
+        },
+        updateCategoriesProduct(productId, categories) {
+            return categoriesStore.updateCategoriesProduct(productId, categories)
         }
     }
 }
