@@ -21,10 +21,16 @@
 <script>
 import BaseHeader from "@/components/common/baseWrapper/BaseHeader";
 import BaseSidebar from "@/components/common/baseWrapper/BaseSidebar";
+import useCategoriesStore from "@/store/categories/categories.store";
+
+const categoriesStore = useCategoriesStore()
 
 export default {
   name: 'base-wrapper',
-  components: { BaseHeader, BaseSidebar }
+  components: { BaseHeader, BaseSidebar },
+  created() {
+    categoriesStore.getCategories()
+  }
 }
 </script>
 

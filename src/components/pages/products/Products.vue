@@ -15,11 +15,13 @@
             label="Статус"
             width="auto"
         >
-
         </el-table-column>
         <el-table-column width="220">
           <template #default="scope">
-            <el-button type="primary" icon="edit" />
+            <el-button
+                type="primary" icon="edit"
+                @click="$router.push(`/products/${scope.row._id}`)"
+            />
             <el-button type="danger" icon="delete" />
           </template>
         </el-table-column>
