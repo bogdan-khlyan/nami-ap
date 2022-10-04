@@ -26,7 +26,7 @@
 export default {
   name: 'base-upload-images',
   props: {
-    modelValue: [],
+    modelValue: { type: Array },
     onlyEmit: { type: Boolean, default: false }
   },
   methods: {
