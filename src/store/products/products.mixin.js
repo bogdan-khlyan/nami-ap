@@ -14,6 +14,9 @@ export default {
         },
         updateProduct(id, type, product) {
             return productsStore.updateProduct(id, type, product)
+        },
+        createProduct(type, product) {
+            return productsStore.createProduct(type, product)
         }
     }
 }

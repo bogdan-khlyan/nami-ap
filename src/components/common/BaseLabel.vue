@@ -1,5 +1,9 @@
 <template>
-  <component :is="tag" class="base-label" :class="[type, { error: isError }]" ref="root">
+  <component
+      :is="tag"
+      class="base-label"
+      :class="[type, { error: isError }]"
+      ref="root">
     <span class="label">{{ label }}</span>
     <span class="base-label__content">
       <slot/>
@@ -44,8 +48,11 @@ export default {
 <style lang="scss" scoped>
 .base-label {
   display: block;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  .label {
+    font-size: 14px;
+  }
   &.flex {
     display: flex;
     align-items: center;
@@ -59,14 +66,15 @@ export default {
     }
   }
   &.error {
-    :deep(.el-input__wrapper) {
+    :deep(.el-input__wrapper), :deep(.el-textarea) {
       box-shadow: 0 0 0 1px red!important;
+      border-radius: 4px;
     }
   }
   &__error-message {
     display: block;
     margin-top: -3px;
-    font-size: 14px;
+    font-size: 13px;
     color: red;
   }
   &__content {

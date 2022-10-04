@@ -25,7 +25,7 @@ export default {
     padding-right: 10px;
     display: flex;
     align-items: center;
-    height: 40px;
+    min-height: 40px;
     border-bottom: 1px solid #e5e7ed;
     background-color: #f5f7fa;
 
