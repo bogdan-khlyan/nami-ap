@@ -181,26 +181,40 @@ export default {
     },
     async saveSingle() {
       if (this.isCreate) {
-        const created = await this.createProduct('SINGLE', {
-          title: this.product.title,
-          description: this.product.description,
-          cost: this.product.cost,
-          weight: this.product.weight,
-          ingredients: this.product.ingredients,
-          visible: false
-        })
-        await this.updateCategoriesProduct(created._id, this.product.categories)
-        this.$router.push(`/products/${created._id}`)
+        try {
+          const created = await this.createProduct('SINGLE', {
+            title: this.product.title,
+            description: this.product.description,
+            cost: this.product.cost,
+            weight: this.product.weight,
+            ingredients: this.product.ingredients,
+            visible: false
+          })
+          await this.updateCategoriesProduct(created._id, this.product.categories)
+          this.$notify.success({ title: 'Продукт успешно создан!' })
+          this.$router.push('/products')
+        } catch (error) {
+          this.$notify.error({ title: 'Продукт не был создан!' })
+        }
       } else {
-        this.updateProduct(this.product._id, 'SINGLE', {
-          title: this.product.title,
-          description: this.product.description,
-          cost: this.product.cost,
-          weight: this.product.weight,
-          ingredients: this.product.ingredients,
-          visible: this.product.visible
-        })
-        this.updateCategoriesProduct(this.product._id, this.product.categories)
+        try {
+          const promises = []
+          promises.push(
+              this.updateProduct(this.product._id, 'SINGLE', {
+                title: this.product.title,
+                description: this.product.description,
+                cost: this.product.cost,
+                weight: this.product.weight,
+                ingredients: this.product.ingredients,
+                visible: this.product.visible
+              }),
+              this.updateCategoriesProduct(this.product._id, this.product.categories)
+          )
+          await Promise.all(promises)
+          this.$notify.success({ title: 'Продукт успешно обновлен!' })
+        } catch (error) {
+          this.$notify.error({ title: 'Продукт не был обновлен!' })
+        }
       }
     },
   },
