@@ -20,6 +20,9 @@ export default {
         },
         createVariantForProduct(productId, variant) {
             return productsStore.createVariantForProduct(productId, variant)
+        },
+        updateVariantForProduct(productId, variantId, variant) {
+            return productsStore.updateVariantForProduct(productId, variantId, variant)
         }
     }
 }

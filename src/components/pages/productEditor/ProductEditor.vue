@@ -71,7 +71,10 @@
               style="width: 100%"
           >
             <template #header>Начинки</template>
-            <variants ref="variants"/>
+            <variants
+                :current-variants="product.variants"
+                ref="variants"
+            />
           </base-card>
         </div>
       </template>
@@ -159,6 +162,15 @@ export default {
         await this.updateCategoriesProduct(created._id, this.product.categories)
         console.log(created)
         await this.$refs.variants.createVariants(created._id)
+      } else {
+        const updated = await this.updateProduct(this.product._id, 'VARIANT', {
+          title: this.product.title,
+          description: this.product.description,
+          ingredients: this.product.ingredients,
+          visible: this.product.visible
+        })
+        await this.updateCategoriesProduct(updated._id, this.product.categories)
+        await this.$refs.variants.updateVariants(updated._id)
       }
     },
     async saveSingle() {

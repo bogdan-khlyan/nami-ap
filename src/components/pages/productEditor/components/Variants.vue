@@ -25,9 +25,17 @@ export default {
   name: 'variants',
   mixins: [productsMixin],
   components: { BaseUploadImage, BaseSelectIcon, BaseLabel, Variant },
+  props: {
+    currentVariants: { type: Array }
+  },
   data() {
     return {
       variants: []
+    }
+  },
+  created() {
+    if (this.currentVariants) {
+      this.variants.push(...this.currentVariants)
     }
   },
   methods: {
@@ -54,6 +62,27 @@ export default {
         )
       })
       return await Promise.all(promises)
+    },
+    async updateVariants(productId) {
+      const promises = []
+      this.variants.forEach(variant => {
+        promises.push(
+            variant._id ?
+                this.updateVariantForProduct(productId, variant._id, {
+                  title: variant.title,
+                  icon: variant.icon,
+                  cost: variant.cost,
+                  weight: variant.weight
+                }) :
+                this.createVariantForProduct(productId, {
+                  title: variant.title,
+                  icon: variant.icon,
+                  cost: variant.cost,
+                  weight: variant.weight,
+                  visible: true
+                })
+        )
+      })
     },
     handleAddVariant() {
       this.variants.push({
