@@ -1,26 +1,65 @@
 <template>
   <div class="variants">
     <div class="variants__item"
-         v-for="(item, index) in modelValue">
-      <base-upload-image v-model="modelValue[index].image"/>
-      <el-input v-model="modelValue[index].title" placeholder="Please input" />
+         v-for="(item, index) in variants">
+      <base-upload-image
+          v-model="variants[index].image"
+      />
+      <base-label style="margin-left: 4px;margin-right: 4px">
+        <el-input
+            v-model="variants[index].title"
+            placeholder="Наименование"
+        />
+      </base-label>
+      <base-select-icon
+          v-model="variants[index].icon"
+      />
+      <base-label style="margin-left: 4px;margin-right: 4px">
+        <el-input-number
+            v-model="variants[index].cost"
+            :min="0"
+            placeholder="Цена"
+        />
+      </base-label>
+      <base-label>
+        <el-input-number
+            v-model="variants[index].weight"
+            :min="0"
+            placeholder="Вес"
+        />
+      </base-label>
     </div>
     <el-button
         type="primary" icon="plus"
-        @click="modelValue.push({})"
+        @click="handleAddVariant"
     >Добавить</el-button>
   </div>
 </template>
 
 <script>
 import BaseUploadImage from "@/components/common/BaseUploadImage";
+import BaseSelectIcon from "@/components/common/BaseSelectIcon";
+import BaseLabel from "@/components/common/BaseLabel";
 
 export default {
   name: 'variants',
-  components: { BaseUploadImage },
-  props: {
-    modelValue: { type: Array }
+  components: { BaseUploadImage, BaseSelectIcon, BaseLabel },
+  data() {
+    return {
+      variants: []
+    }
   },
+  methods: {
+    handleAddVariant() {
+      this.variants.push({
+        image: null,
+        title: null,
+        icon: null,
+        cost: null,
+        weight: null
+      })
+    }
+  }
 }
 </script>
 
@@ -31,6 +70,14 @@ export default {
   }
   &__item {
     display: flex;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    :deep(.base-label) {
+      margin: 0;
+      .el-input {
+        height: 56px;
+      }
+    }
   }
 }
 </style>

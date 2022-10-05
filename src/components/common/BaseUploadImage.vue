@@ -16,6 +16,8 @@ export default {
   justify-content: center;
   align-items: center;
 
+  min-width: 56px;
+  min-height: 56px;
   width: 56px;
   height: 56px;
 

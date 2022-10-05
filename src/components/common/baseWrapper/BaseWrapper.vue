@@ -21,15 +21,16 @@
 <script>
 import BaseHeader from "@/components/common/baseWrapper/BaseHeader";
 import BaseSidebar from "@/components/common/baseWrapper/BaseSidebar";
-import useCategoriesStore from "@/store/categories/categories.store";
-
-const categoriesStore = useCategoriesStore()
+import categoriesMixin from "@/store/categories/categories.mixin";
+import iconsMixin from "@/store/icons/icons.mixin";
 
 export default {
   name: 'base-wrapper',
+  mixins: [categoriesMixin, iconsMixin],
   components: { BaseHeader, BaseSidebar },
   created() {
-    categoriesStore.getCategories()
+    this.getCategories()
+    this.getIcons()
   }
 }
 </script>
