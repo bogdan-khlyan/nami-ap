@@ -30,6 +30,10 @@ export default defineStore({
             const response = await axios.post(`/api/admin/product/VARIANT/${productId}/variant`, variant)
             return response.data.variant
         },
+        async updateVariantForProduct(productId, variantId, variant) {
+            const response = await axios.patch(`/api/admin/product/VARIANT/${productId}/variant/${variantId}`, variant)
+            return response.data.variant
+        },
         async createSingleProduct(product) {
             const response = await axios.post(`/api/admin/product/SINGLE`, product)
             return response.data.product
