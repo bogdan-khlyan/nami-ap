@@ -2,32 +2,10 @@
   <div class="variants">
     <div class="variants__item"
          v-for="(item, index) in variants">
-      <base-upload-image
-          v-model="variants[index].image"
+      <variant
+          v-model="variants[index]"
+          :ref="`variant${index}`"
       />
-      <base-label style="margin-left: 4px;margin-right: 4px">
-        <el-input
-            v-model="variants[index].title"
-            placeholder="Наименование"
-        />
-      </base-label>
-      <base-select-icon
-          v-model="variants[index].icon"
-      />
-      <base-label style="margin-left: 4px;margin-right: 4px">
-        <el-input-number
-            v-model="variants[index].cost"
-            :min="0"
-            placeholder="Цена"
-        />
-      </base-label>
-      <base-label>
-        <el-input-number
-            v-model="variants[index].weight"
-            :min="0"
-            placeholder="Вес"
-        />
-      </base-label>
     </div>
     <el-button
         type="primary" icon="plus"
@@ -40,16 +18,43 @@
 import BaseUploadImage from "@/components/common/BaseUploadImage";
 import BaseSelectIcon from "@/components/common/BaseSelectIcon";
 import BaseLabel from "@/components/common/BaseLabel";
+import Variant from "@/components/pages/productEditor/components/Variant";
+import productsMixin from "@/store/products/products.mixin";
 
 export default {
   name: 'variants',
-  components: { BaseUploadImage, BaseSelectIcon, BaseLabel },
+  mixins: [productsMixin],
+  components: { BaseUploadImage, BaseSelectIcon, BaseLabel, Variant },
   data() {
     return {
       variants: []
     }
   },
   methods: {
+    validate() {
+      let valid = true
+      this.variants.forEach((variant, index) => {
+        if (!this.$refs[`variant${index}`][0].validate()) {
+          valid = false
+        }
+      })
+      return valid
+    },
+    async createVariants(productId) {
+      const promises = []
+      this.variants.forEach(variant => {
+        promises.push(
+            this.createVariantForProduct(productId, {
+              title: variant.title,
+              icon: variant.icon,
+              cost: variant.cost,
+              weight: variant.weight,
+              visible: true
+            })
+        )
+      })
+      return await Promise.all(promises)
+    },
     handleAddVariant() {
       this.variants.push({
         image: null,

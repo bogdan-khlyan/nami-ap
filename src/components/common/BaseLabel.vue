@@ -8,7 +8,7 @@
     <span class="base-label__content">
       <slot/>
       <el-collapse-transition>
-        <span v-if="isError && errorMessage" class="base-label__error-message">{{errorMessage}}</span>
+        <span v-if="isError && errorMessage && !noMessage" class="base-label__error-message">{{errorMessage}}</span>
       </el-collapse-transition>
     </span>
   </component>
@@ -23,7 +23,8 @@ export default {
     type: { type: String, default: null },
     label: { type: String, default: null },
     validator: { type: Object },
-    tag: { type: String, default: 'label' }
+    tag: { type: String, default: 'label' },
+    noMessage: { type: Boolean, default: false }
   },
   computed: {
     isError() {

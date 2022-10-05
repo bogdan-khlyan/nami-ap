@@ -17,6 +17,9 @@ export default {
         },
         createProduct(type, product) {
             return productsStore.createProduct(type, product)
+        },
+        createVariantForProduct(productId, variant) {
+            return productsStore.createVariantForProduct(productId, variant)
         }
     }
 }
