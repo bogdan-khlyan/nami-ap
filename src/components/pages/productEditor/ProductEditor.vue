@@ -43,9 +43,7 @@
             <base-label :validator="v$.product.title">
               <el-input v-model="product.title" placeholder="Наименование продукта" />
             </base-label>
-            <base-label
-                v-if="product.type === 'SINGLE'"
-                :validator="v$.product.description">
+            <base-label :validator="v$.product.description">
               <el-input
                   v-model="product.description"
                   :rows="2"
@@ -53,7 +51,8 @@
                   placeholder="Описание продукта"
               />
             </base-label>
-            <div class="product-editor__cost">
+            <div v-if="product.type === 'SINGLE'"
+                 class="product-editor__cost">
               <base-label label="Стоимость">
                 <el-input-number v-model="product.cost" :min="0" />
               </base-label>
@@ -72,7 +71,7 @@
               style="width: 100%"
           >
             <template #header>Начинки</template>
-            <variants v-model="product.variants"/>
+            <variants ref="variants"/>
           </base-card>
         </div>
       </template>
@@ -126,8 +125,7 @@ export default {
           cost: 0,
           weight: 0,
           categories: [],
-          ingredients: [],
-          variants: []
+          ingredients: []
         }
         return
       }
@@ -142,58 +140,63 @@ export default {
     },
     async save() {
       this.v$.$touch()
-      if (!this.v$.$error) {
-        if (this.isCreate) {
-          if (this.product.type === 'SINGLE') {
-            const created = await this.createProduct('SINGLE', {
-              title: this.product.title,
-              description: this.product.description,
-              cost: this.product.cost,
-              weight: this.product.weight,
-              ingredients: this.product.ingredients,
-              visible: false
-            })
-            await this.updateCategoriesProduct(created._id, this.product.categories)
-            this.$router.push(`/products/${created._id}`)
-          }
+      if (!this.v$.$error && this.$refs.variants.validate()) {
+        if (this.product.type === 'SINGLE') {
+          await this.saveSingle()
         } else {
-          if (this.product.type === 'SINGLE') {
-            this.updateProduct(this.product._id, 'SINGLE', {
-              title: this.product.title,
-              description: this.product.description,
-              cost: this.product.cost,
-              weight: this.product.weight,
-              ingredients: this.product.ingredients,
-              visible: this.product.visible
-            })
-            this.updateCategoriesProduct(this.product._id, this.product.categories)
-          }
+          await this.saveVariant()
         }
       }
-    }
+    },
+    async saveVariant() {
+      if (this.isCreate) {
+        const created = await this.createProduct('VARIANT', {
+          title: this.product.title,
+          description: this.product.description,
+          ingredients: this.product.ingredients,
+          visible: false,
+        })
+        await this.updateCategoriesProduct(created._id, this.product.categories)
+        console.log(created)
+        await this.$refs.variants.createVariants(created._id)
+      }
+    },
+    async saveSingle() {
+      if (this.isCreate) {
+        const created = await this.createProduct('SINGLE', {
+          title: this.product.title,
+          description: this.product.description,
+          cost: this.product.cost,
+          weight: this.product.weight,
+          ingredients: this.product.ingredients,
+          visible: false
+        })
+        await this.updateCategoriesProduct(created._id, this.product.categories)
+        this.$router.push(`/products/${created._id}`)
+      } else {
+        this.updateProduct(this.product._id, 'SINGLE', {
+          title: this.product.title,
+          description: this.product.description,
+          cost: this.product.cost,
+          weight: this.product.weight,
+          ingredients: this.product.ingredients,
+          visible: this.product.visible
+        })
+        this.updateCategoriesProduct(this.product._id, this.product.categories)
+      }
+    },
   },
   validations () {
     if (this.product) {
-      if (this.product.type === 'SINGLE') {
-        return {
-          product: {
-            title: {
-              required,
-              minLength: minLength(5)
-            },
-            description: {
-              required,
-              minLength: minLength(5)
-            }
-          }
-        }
-      } else {
-        return {
-          product: {
-            title: {
-              required,
-              minLength: minLength(5)
-            }
+      return {
+        product: {
+          title: {
+            required,
+            minLength: minLength(5)
+          },
+          description: {
+            required,
+            minLength: minLength(5)
           }
         }
       }
