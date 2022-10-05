@@ -9,7 +9,7 @@
       </div>
       <div class="base-wrapper__content">
         <router-view v-slot="{ Component }">
-          <transition name="fade-transition" mode="out-in">
+          <transition name="el-fade-in-linear" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
