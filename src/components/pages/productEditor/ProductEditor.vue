@@ -11,7 +11,7 @@
       </template>
 
       <template v-if="product">
-        <base-label label="Тим продукта">
+        <base-label label="Тим продукта" tag="span">
           <el-radio-group v-model="product.type" :disabled="!isCreate">
             <el-radio label="SINGLE" size="large">Обычный</el-radio>
             <el-radio label="VARIANT" size="large">С вариантами начинок</el-radio>
@@ -66,7 +66,11 @@
             <template #header>Ингридиенты</template>
             <ingredients v-model="product.ingredients"/>
           </base-card>
-          <base-card v-if="product.type === 'VARIANT'" class="product-editor__card">
+          <base-card
+              v-if="product.type === 'VARIANT'"
+              class="product-editor__card"
+              style="width: 100%"
+          >
             <template #header>Начинки</template>
             <variants v-model="product.variants"/>
           </base-card>
