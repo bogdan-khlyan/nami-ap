@@ -30,12 +30,28 @@ export default defineStore({
             return response.data.product
         },
         async createVariantForProduct(productId, variant) {
+            const image = variant.image
+            delete variant.image
             const response = await axios.post(`/api/admin/product/VARIANT/${productId}/variant`, variant)
+            if (image) {
+                await this.putImageForVariant(response.data.variant._id, image)
+            }
             return response.data.variant
         },
         async updateVariantForProduct(productId, variantId, variant) {
+            console.log(variant)
+            const image = variant.image
+            delete variant.image
             const response = await axios.patch(`/api/admin/product/VARIANT/${productId}/variant/${variantId}`, variant)
+            if (image) {
+                await this.putImageForVariant(response.data.variant._id, image)
+            }
             return response.data.variant
+        },
+        async putImageForVariant(variantId, image) {
+            const formData = new FormData()
+            formData.append('image', image)
+            const response = await axios.put(`/api/admin/product/variant/${variantId}`, formData)
         },
         async createSingleProduct(product) {
             const response = await axios.post(`/api/admin/product/SINGLE`, product)
