@@ -2,10 +2,16 @@
   <div class="login">
     <base-card class="login__card">
       <template #header>Авторизация</template>
-      <base-label label="Логин">
+      <base-label
+          label="Логин"
+          :validator="v$.login"
+      >
         <el-input v-model="login" placeholder="example@google.com" />
       </base-label>
-      <base-label label="Пароль">
+      <base-label
+          label="Пароль"
+          :validator="v$.password"
+      >
         <el-input
             v-model="password"
             type="password"
@@ -27,10 +33,15 @@
 import BaseCard from "@/components/common/BaseCard";
 import BaseLabel from "@/components/common/BaseLabel";
 import axios from "axios";
+import {useVuelidate} from "@vuelidate/core/dist/index.esm";
+import {minLength, required} from "@vuelidate/validators";
 
 export default {
   name: 'login',
   components: { BaseCard, BaseLabel },
+  setup () {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       login: '',
@@ -39,11 +50,28 @@ export default {
   },
   methods: {
     async submit() {
-      await axios.post('/api/user/signin', {
-        login: this.login,
-        password: this.password
-      })
-      this.$router.push('/products')
+      this.v$.$touch()
+      if (!this.v$.$error) {
+        try {
+          await axios.post('/api/user/signin', {
+            login: this.login,
+            password: this.password
+          })
+          this.$router.push('/products')
+        } catch (error) {
+          this.$notify.error({ title: 'Что-то пошло не так' })
+        }
+      }
+    }
+  },
+  validations: {
+    login: {
+      required,
+      minLength: minLength(5)
+    },
+    password: {
+      required,
+      minLength: minLength(5)
     }
   }
 }
