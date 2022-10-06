@@ -44,7 +44,7 @@
                 v-model="scope.row.visible"
                 inline-prompt
                 style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                :disabled="loading === scope.row._id"
+                :loading="loading === scope.row._id"
                 @change="updateProductStatus(scope.row)"
             />
           </template>
