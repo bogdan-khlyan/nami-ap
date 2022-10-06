@@ -1,29 +1,6 @@
 <template>
   <div class="base-header">
-
     <span class="base-header__title">{{ title }}</span>
-
-    <div class="base-header__account">
-      <div class="base-header__account--avatar">
-        <span>Ф</span>
-      </div>
-      <div class="base-header__account--name">
-        <span class="role">Руководитель проекта</span>
-        <span class="name">Фамилия И.О.</span>
-      </div>
-      <div class="base-header__account--settings">
-        <router-link
-            class="base-header__account--exit"
-            to="/not-found8">
-          <v-btn icon="mdi-cog"/>
-        </router-link>
-      </div>
-      <router-link
-          class="base-header__account--exit"
-          to="/login">
-        <v-btn icon="mdi-exit-to-app"/>
-      </router-link>
-    </div>
   </div>
 </template>
 
