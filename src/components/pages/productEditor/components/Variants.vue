@@ -57,7 +57,7 @@ export default {
               icon: variant.icon,
               cost: variant.cost,
               weight: variant.weight,
-              visible: true
+              visible: variant.visible
             })
         )
       })
@@ -72,14 +72,15 @@ export default {
                   title: variant.title,
                   icon: variant.icon,
                   cost: variant.cost,
-                  weight: variant.weight
+                  weight: variant.weight,
+                  visible: variant.visible
                 }) :
                 this.createVariantForProduct(productId, {
                   title: variant.title,
                   icon: variant.icon,
                   cost: variant.cost,
                   weight: variant.weight,
-                  visible: true
+                  visible: variant.visible
                 })
         )
       })
@@ -90,7 +91,8 @@ export default {
         title: null,
         icon: null,
         cost: null,
-        weight: null
+        weight: null,
+        visible: false
       })
     }
   }

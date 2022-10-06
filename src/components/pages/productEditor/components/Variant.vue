@@ -38,6 +38,11 @@
           placeholder="Вес"
       />
     </base-label>
+    <el-switch
+        v-model="modelValue.visible"
+        inline-prompt
+        style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949;margin-left: 5px"
+    />
   </div>
 </template>
 
@@ -81,6 +86,7 @@ export default {
 <style lang="scss" scoped>
 .variant {
   display: flex;
+  align-items: center;
   margin-top: 4px;
   margin-bottom: 4px;
   :deep(.base-label) {

@@ -72,7 +72,7 @@
             <base-card
                 v-if="product.type === 'VARIANT'"
                 class="product-editor__card"
-                style="width: 100%"
+                style="width: 100%;max-width: 700px;"
             >
               <template #header>Начинки</template>
               <variants
@@ -276,8 +276,8 @@ export default {
     margin-bottom: 10px;
   }
   &__card {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-top: 5px;
+    margin-right: 10px;
     min-width: 400px;
     &:first-child {
       margin-left: 0;
@@ -291,6 +291,7 @@ export default {
   }
   &__content {
     display: flex;
+    flex-wrap: wrap;
   }
   &__cost {
     display: flex;
