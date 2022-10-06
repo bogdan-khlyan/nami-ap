@@ -11,7 +11,10 @@ export default defineStore({
             const response = await axios.get('/api/admin/products')
             this.products = response.data.products.map(item => ({
                 ...item,
-                images: item.images.map(image => `/api/product/image/${image}`)
+                images: item.images.map(image => ({
+                    filename: image,
+                    link: `/api/product/image/${image}`
+                }))
             }))
             return this.products
         },
@@ -50,6 +53,16 @@ export default defineStore({
             const updated = response.data.product
             const index = this.products.findIndex(item => item._id === updated._id)
             this.products[index] = updated
+        },
+        async putImagesForSingleProduct(productId, files) {
+            const formData = new FormData()
+            Array.from(files).forEach(file => {
+                formData.append('images', file)
+            })
+            const response = await axios.put(`/api/admin/product/${productId}/images`, formData)
+        },
+        async deleteImageFromProduct(productId, filename) {
+            const response = await axios.delete(`/api/admin/product/${productId}/image/${filename}`)
         },
         async updateVariantProduct(id, product) {
             const response = await axios.patch(`/api/admin/product/VARIANT/${id}`, product)
