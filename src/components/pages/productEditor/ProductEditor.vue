@@ -67,7 +67,10 @@
             </base-card>
             <base-card class="product-editor__card">
               <template #header>Ингридиенты</template>
-              <ingredients v-model="product.ingredients"/>
+              <ingredients
+                  v-model="product.ingredients"
+                  ref="ingredients"
+              />
             </base-card>
             <base-card
                 v-if="product.type === 'VARIANT'"
@@ -158,7 +161,7 @@ export default {
     },
     async save() {
       this.v$.$touch()
-      if (!this.v$.$error) {
+      if (this.$refs.ingredients.validate() && !this.v$.$error) {
         if (this.product.type === 'SINGLE') {
           await this.saveSingle()
         } else if (this.$refs.variants.validate()) {
