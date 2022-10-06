@@ -30,6 +30,11 @@ export default {
   components: { BaseHeader, BaseSidebar },
   created() {
     this.getCategories()
+        .catch(error => {
+          if (error.response.status === 401) {
+            this.$router.push('/login')
+          }
+        })
     this.getIcons()
   }
 }
