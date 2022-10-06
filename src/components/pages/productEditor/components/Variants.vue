@@ -53,6 +53,7 @@ export default {
       this.variants.forEach(variant => {
         promises.push(
             this.createVariantForProduct(productId, {
+              image: variant.image?.file,
               title: variant.title,
               icon: variant.icon,
               cost: variant.cost,
@@ -69,6 +70,7 @@ export default {
         promises.push(
             variant._id ?
                 this.updateVariantForProduct(productId, variant._id, {
+                  image: variant.image?.file,
                   title: variant.title,
                   icon: variant.icon,
                   cost: variant.cost,
@@ -76,6 +78,7 @@ export default {
                   visible: variant.visible
                 }) :
                 this.createVariantForProduct(productId, {
+                  image: variant.image?.file,
                   title: variant.title,
                   icon: variant.icon,
                   cost: variant.cost,

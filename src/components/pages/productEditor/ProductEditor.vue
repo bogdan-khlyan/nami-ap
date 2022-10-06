@@ -154,7 +154,18 @@ export default {
         }
         return
       }
-      this.product = this.products.find(item => item._id === this.productId)
+      const product = this.products.find(item => item._id === this.productId)
+      this.product = {
+        ...product,
+        variants: product.variants ? (
+            product.variants.map(variant => ({
+              ...variant,
+              image: variant.image ? {
+                link: `/api/product/variant/image/${variant.image}`
+              } : null
+            }))
+        ) : null
+      }
       this.product.categories = this.categories
           .filter(item => !!item.productIds.find(productId => productId === this.product._id))
           .map(item => item._id)
@@ -179,6 +190,7 @@ export default {
         })
         await this.updateCategoriesProduct(created._id, this.product.categories)
         await this.$refs.variants.createVariants(created._id)
+        this.$router.push('/products')
       } else {
         const updated = await this.updateProduct(this.product._id, 'VARIANT', {
           title: this.product.title,
@@ -188,6 +200,7 @@ export default {
         })
         await this.updateCategoriesProduct(updated._id, this.product.categories)
         await this.$refs.variants.updateVariants(updated._id)
+        this.$router.push('/products')
       }
     },
     async saveSingle() {
@@ -239,6 +252,7 @@ export default {
             promises.push(this.deleteImageFromProduct(this.product._id, image.filename))
           })
           await Promise.all(promises)
+          this.$router.push('/products')
           this.$notify.success({ title: 'Продукт успешно обновлен!' })
         } catch (error) {
           this.$notify.error({ title: 'Продукт не был обновлен!' })
