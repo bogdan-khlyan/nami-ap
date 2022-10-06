@@ -23,6 +23,12 @@ export default {
         },
         updateVariantForProduct(productId, variantId, variant) {
             return productsStore.updateVariantForProduct(productId, variantId, variant)
+        },
+        putImagesForSingleProduct(productId, files) {
+            return productsStore.putImagesForSingleProduct(productId, files)
+        },
+        deleteImageFromProduct(productId, filename) {
+            return productsStore.deleteImageFromProduct(productId, filename)
         }
     }
 }

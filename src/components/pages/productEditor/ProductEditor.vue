@@ -20,7 +20,10 @@
           </base-label>
           <div v-if="product.type === 'SINGLE'"
                class="product-editor__images">
-            <base-upload-images v-model="product.images"/>
+            <base-upload-images
+                v-model="product.images"
+                @delete="handleDeleteImage"
+            />
           </div>
           <div class="product-editor__content">
             <base-card class="product-editor__card">
@@ -108,7 +111,8 @@ export default {
   },
   data() {
     return {
-      product: null
+      product: null,
+      deleteImages: []
     }
   },
   computed: {
@@ -124,6 +128,15 @@ export default {
         .then(() => this.getProduct())
   },
   methods: {
+    handleDeleteImage(image) {
+      const index = this.product.images.findIndex(item => item.filename === image.filename)
+      if (index !== -1) {
+        this.product.images.splice(index, 1)
+        if (image.filename) {
+          this.deleteImages.push(image)
+        }
+      }
+    },
     getProduct() {
       if (this.productId === 'create') {
         this.product = {
@@ -138,11 +151,7 @@ export default {
         }
         return
       }
-      const product = this.products.find(item => item._id === this.productId)
-      this.product = {
-        ...product,
-        images: product.images.map(image => ({ link: image }))
-      }
+      this.product = this.products.find(item => item._id === this.productId)
       this.product.categories = this.categories
           .filter(item => !!item.productIds.find(productId => productId === this.product._id))
           .map(item => item._id)
@@ -166,7 +175,6 @@ export default {
           visible: false,
         })
         await this.updateCategoriesProduct(created._id, this.product.categories)
-        console.log(created)
         await this.$refs.variants.createVariants(created._id)
       } else {
         const updated = await this.updateProduct(this.product._id, 'VARIANT', {
@@ -190,7 +198,11 @@ export default {
             ingredients: this.product.ingredients,
             visible: false
           })
-          await this.updateCategoriesProduct(created._id, this.product.categories)
+          const promises = []
+          promises.push(
+              this.updateCategoriesProduct(created._id, this.product.categories),
+              this.putImagesForSingleProduct(created._id, this.product.images.map(image => image.file))
+          )
           this.$notify.success({ title: 'Продукт успешно создан!' })
           this.$router.push('/products')
         } catch (error) {
@@ -208,8 +220,21 @@ export default {
                 ingredients: this.product.ingredients,
                 visible: this.product.visible
               }),
-              this.updateCategoriesProduct(this.product._id, this.product.categories)
+              this.updateCategoriesProduct(this.product._id, this.product.categories),
           )
+          const uploadImages = this.product.images
+              .filter(image => !!image.file)
+          if (uploadImages.length > 0) {
+            promises.push(
+                this.putImagesForSingleProduct(
+                    this.product._id,
+                    uploadImages.map(image => image.file)
+                )
+            )
+          }
+          this.deleteImages.forEach(image => {
+            promises.push(this.deleteImageFromProduct(this.product._id, image.filename))
+          })
           await Promise.all(promises)
           this.$notify.success({ title: 'Продукт успешно обновлен!' })
         } catch (error) {
