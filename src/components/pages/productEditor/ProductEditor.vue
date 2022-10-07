@@ -58,10 +58,10 @@
               <div v-if="product.type === 'SINGLE'"
                    class="product-editor__cost">
                 <base-label label="Стоимость">
-                  <el-input-number v-model="product.cost" :min="0" />
+                  <el-input-number v-model="product.cost" :min="0" :max="100000" />
                 </base-label>
                 <base-label label="Вес">
-                  <el-input-number v-model="product.weight" :min="0" />
+                  <el-input-number v-model="product.weight" :min="0" :max="100000" />
                 </base-label>
               </div>
             </base-card>
