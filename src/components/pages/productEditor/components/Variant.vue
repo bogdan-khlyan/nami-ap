@@ -25,6 +25,7 @@
       <el-input-number
           v-model="modelValue.cost"
           :min="0"
+          :max="100000"
           placeholder="Цена"
       />
     </base-label>
@@ -35,6 +36,7 @@
       <el-input-number
           v-model="modelValue.weight"
           :min="0"
+          :max="100000"
           placeholder="Вес"
       />
     </base-label>
