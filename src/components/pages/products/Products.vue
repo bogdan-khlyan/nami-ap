@@ -96,7 +96,7 @@ export default {
         filtered = filtered.filter(product =>
             product.title
                 .toLowerCase()
-                .startsWith(this.filters.title)
+                .indexOf(this.filters.title.toLowerCase()) !== -1
         )
       }
       return filtered
