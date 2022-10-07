@@ -28,7 +28,7 @@
           <div class="product-editor__content">
             <base-card class="product-editor__card">
               <template #header>Основная информация</template>
-              <base-label tag="span">
+              <base-label tag="span" :validator="v$.product.categories">
                 <el-select
                     v-model="product.categories"
                     multiple
@@ -264,6 +264,9 @@ export default {
     if (this.product) {
       return {
         product: {
+          categories: {
+            required
+          },
           title: {
             required,
             minLength: minLength(5)
