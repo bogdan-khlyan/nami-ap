@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     handleDeleteImage(image) {
-      const index = this.product.images.findIndex(item => item.filename === image.filename)
+      const index = this.product.images.findIndex(item => item.link === image.link)
       if (index !== -1) {
         this.product.images.splice(index, 1)
         if (image.filename) {
