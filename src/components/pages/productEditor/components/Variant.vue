@@ -73,7 +73,7 @@ export default {
       modelValue: {
         title: {
           required,
-          minLength: minLength(5)
+          minLength: minLength(3)
         },
         cost: { required },
         weight: { required }
