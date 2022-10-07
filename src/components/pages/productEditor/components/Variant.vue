@@ -36,7 +36,7 @@
       <el-input-number
           v-model="modelValue.weight"
           :min="0"
-          :max="100000"
+          :max="9999"
           placeholder="Вес"
       />
     </base-label>

@@ -61,7 +61,7 @@
                   <el-input-number v-model="product.cost" :min="0" :max="100000" />
                 </base-label>
                 <base-label label="Вес">
-                  <el-input-number v-model="product.weight" :min="0" :max="100000" />
+                  <el-input-number v-model="product.weight" :min="0" :max="9999" />
                 </base-label>
               </div>
             </base-card>
