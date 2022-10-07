@@ -74,7 +74,7 @@ export default {
   }
   &__error-message {
     display: block;
-    margin-top: -3px;
+    margin-top: -2px;
     font-size: 13px;
     color: red;
   }
