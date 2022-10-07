@@ -12,7 +12,7 @@
 
       <transition name="el-fade-in-linear" mode="out-in">
         <div v-if="product">
-          <base-label label="Тим продукта" tag="span">
+          <base-label label="Тип продукта" tag="span">
             <el-radio-group v-model="product.type" :disabled="!isCreate">
               <el-radio label="SINGLE" size="large">Обычный</el-radio>
               <el-radio label="VARIANT" size="large">С вариантами начинок</el-radio>
