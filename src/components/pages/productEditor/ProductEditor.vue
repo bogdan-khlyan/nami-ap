@@ -103,7 +103,7 @@ import Variants from "@/components/pages/productEditor/components/Variants";
 import productsMixin from "@/store/products/products.mixin";
 import BaseUploadImages from "@/components/common/BaseUploadImages";
 import {useVuelidate} from "@vuelidate/core/dist/index.esm";
-import {minLength, required} from "@vuelidate/validators";
+import {maxLength, minLength, required} from "@vuelidate/validators";
 
 export default {
   name: 'product-editor',
@@ -269,7 +269,8 @@ export default {
           },
           title: {
             required,
-            minLength: minLength(5)
+            minLength: minLength(5),
+            maxLength: maxLength(32)
           },
           description: {
             required,
