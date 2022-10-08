@@ -46,7 +46,7 @@ export default {
       if (!this.touch) {
         return
       }
-      if (!this.modelValue[index] || this.modelValue[index].length < 3) {
+      if (!this.modelValue[index] || this.modelValue[index].length < 3 || this.modelValue[index].length > 32) {
         this.$refs[`ingredient${index}`][0].classList.add('error')
         return false
       } else {
