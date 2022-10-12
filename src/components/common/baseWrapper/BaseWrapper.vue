@@ -1,11 +1,11 @@
 <template>
   <div class="base-wrapper">
-    <div class="base-wrapper__header">
-      <base-header/>
+    <div class="base-wrapper__sidebar">
+      <base-sidebar/>
     </div>
     <div class="base-wrapper__main">
-      <div class="base-wrapper__sidebar">
-        <base-sidebar/>
+      <div class="base-wrapper__header">
+        <base-header/>
       </div>
       <div class="base-wrapper__content">
         <router-view v-slot="{ Component }">
@@ -42,6 +42,7 @@ export default {
 
 <style lang="scss" scoped>
 .base-wrapper {
+  display: flex;
 
   &__header {
     height: 56px;
@@ -49,14 +50,16 @@ export default {
 
   &__main {
     display: flex;
+    width: 100%;
   }
 
   &__sidebar {
-    min-width: 230px;
-    width: 230px;
+    min-width: 84px;
+    width: 84px;
   }
 
   &__content {
+    padding-top: 56px;
     width: 100%;
   }
 }

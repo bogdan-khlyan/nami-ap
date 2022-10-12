@@ -1,4 +1,4 @@
 export const links = [
-    { title: 'Продукты', icon: 'goods', to: '/products' },
-    { title: 'Иконки', icon: 'grid', to: '/icons' },
+    { title: 'Продукты', icon: 'icon-product', to: '/products' },
+    { title: 'Иконки', icon: 'icon-grid', to: '/icons' },
 ]
