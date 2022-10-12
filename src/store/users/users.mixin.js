@@ -10,6 +10,10 @@ export default {
                 }
             })
             return response.data
+        },
+        async getUser(id) {
+            const response = await axios.get(`/api/admin/user/${id}`)
+            return response.data.user
         }
     }
 }

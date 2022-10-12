@@ -1,5 +1,6 @@
 <template>
   <div class="base-user-avatar"
+       :style="{ width: `${size}px`, height: `${size}px` }"
        v-html="userAvatar"/>
 </template>
 

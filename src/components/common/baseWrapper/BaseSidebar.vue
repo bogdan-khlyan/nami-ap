@@ -27,10 +27,11 @@ import IconArrow from "@/components/common/icons/IconArrow";
 import IconProduct from "@/components/common/icons/IconProduct";
 import IconGrid from "@/components/common/icons/IconGrid";
 import IconUser from "@/components/common/icons/IconUser";
+import IconDashboard from "@/components/common/icons/IconDashboard";
 
 export default {
   name: 'base-sidebar',
-  components: { IconArrow, IconProduct, IconGrid, IconUser },
+  components: { IconArrow, IconProduct, IconGrid, IconUser, IconDashboard },
   props: {
     expand: { type: Boolean }
   },
