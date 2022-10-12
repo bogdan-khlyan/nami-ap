@@ -30,8 +30,8 @@ export default {
   width: 100%;
   height: 56px;
 
-  padding-left: 240px;
-  padding-right: 10px;
+  padding-left: 16px;
+
   border-bottom: 1px solid #e0e0e0;
 
   z-index: 2000;
@@ -43,68 +43,6 @@ export default {
     font-size: 18px;
     line-height: 18px;
     color: #121212;
-  }
-
-  &__account {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-
-    &--avatar {
-      margin-right: 10px;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #3E8FDF;
-      > span {
-        font-style: normal;
-        font-weight: 550;
-        font-size: 18px;
-        line-height: 18px;
-        color: #FFFFFF;
-      }
-    }
-
-    &--name {
-
-      .role {
-        display: block;
-        font-style: normal;
-        font-weight: 550;
-        font-size: 16px;
-        line-height: 16px;
-        color: #121212;
-      }
-
-      > .name {
-        margin-top: 6px;
-        display: block;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 14px;
-        color: #404040;
-      }
-
-    }
-
-    &--settings {
-      margin-left: 10px;
-    }
-
-    &--exit {
-      text-decoration: none;
-      color: #212121;
-
-      :deep(.v-btn) {
-        box-shadow: none;
-      }
-    }
   }
 
 }

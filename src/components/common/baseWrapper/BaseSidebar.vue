@@ -19,20 +19,6 @@
       </router-link>
     </div>
   </div>
-<!--  <el-menu-->
-<!--      class="base-sidebar"-->
-<!--      :default-active="activeLink"-->
-<!--      :router="true"-->
-<!--  >-->
-<!--    <el-menu-item-->
-<!--        v-for="item in items"-->
-<!--        :index="item.to">-->
-<!--      <el-icon>-->
-<!--        <component :is="item.icon"/>-->
-<!--      </el-icon>-->
-<!--      <span>{{ item.title }}</span>-->
-<!--    </el-menu-item>-->
-<!--  </el-menu>-->
 </template>
 
 <script>
@@ -40,10 +26,11 @@ import {links} from "@/components/common/baseWrapper/links";
 import IconArrow from "@/components/common/icons/IconArrow";
 import IconProduct from "@/components/common/icons/IconProduct";
 import IconGrid from "@/components/common/icons/IconGrid";
+import IconUser from "@/components/common/icons/IconUser";
 
 export default {
   name: 'base-sidebar',
-  components: { IconArrow, IconProduct, IconGrid },
+  components: { IconArrow, IconProduct, IconGrid, IconUser },
   props: {
     expand: { type: Boolean }
   },
@@ -51,19 +38,6 @@ export default {
     return {
       drawer: true,
       items: links
-    }
-  },
-  computed: {
-    activeLink() {
-      if (this.$route.path.startsWith('/administration')) {
-        return '/administration'
-      } else if (this.$route.path.startsWith('/documents')) {
-        return '/documents'
-      } else if (this.$route.path.startsWith('/calculations')) {
-        return '/calculations'
-      } else {
-        return this.$route.path
-      }
     }
   },
   methods: {

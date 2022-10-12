@@ -8,6 +8,10 @@ const routes = [{
   path: '/',
   component: () => import('@/components/common/baseWrapper/BaseWrapper'),
   children: [{
+    path: '/users',
+    name: 'users',
+    component: () => import('@/components/pages/users/Users')
+  }, {
     path: '/products',
     name: 'products',
     component: () => import('@/components/pages/products/Products')
