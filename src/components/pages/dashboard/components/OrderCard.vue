@@ -14,7 +14,7 @@
     <div class="order-card__profile">
       <base-user-avatar :avatar="order.user.avatar"/>
       <div class="order-card__profile--info">
-        <div class="phone">{{ order.phone }}</div>
+        <a class="phone" :href="preparePhone(order.phone)">{{ order.phone }}</a>
         <div class="name">{{ order.username }}</div>
       </div>
     </div>
@@ -34,9 +34,11 @@
 <script>
 import ConditionDropDown from "@/components/pages/dashboard/components/ConditionDropDown";
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
+import phonePrepareHrefMixin from "@/mixins/phone-prepare-href.mixin";
 
 export default {
   name: 'order-card',
+  mixins: [phonePrepareHrefMixin],
   components: { ConditionDropDown, BaseUserAvatar },
   props: {
     order: { type: Object }
@@ -94,6 +96,13 @@ export default {
     display: flex;
     &--info {
       padding-left: 10px;
+      > .phone {
+        color: #212121;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 
