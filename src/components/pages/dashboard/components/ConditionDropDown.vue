@@ -12,7 +12,7 @@
         <el-dropdown-item @click="changeCondition('IN_PROGRESS')">В обработке</el-dropdown-item>
         <el-dropdown-item @click="changeCondition('IN_THE_WAY')">Доставляется</el-dropdown-item>
         <el-dropdown-item @click="changeCondition('DONE')">Завершен</el-dropdown-item>
-        <el-dropdown-item @click="changeCondition('REJECTED')">Отменен</el-dropdown-item>
+        <el-dropdown-item @click="changeCondition('REJECT')">Отменен</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -37,8 +37,8 @@ export default {
     }
   },
   methods: {
-    changeCondition(condition) {
-      this.changeOrderCondition(this.orderNumber, condition)
+    async changeCondition(condition) {
+      await this.changeOrderCondition(this.orderNumber, condition)
       this.$emit('change', condition)
     }
   }

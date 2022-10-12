@@ -56,6 +56,9 @@ export default {
   &__sidebar {
     min-width: 84px;
     width: 84px;
+    //@media screen and (max-width: 768px) {
+    //
+    //}
   }
 
   &__content {

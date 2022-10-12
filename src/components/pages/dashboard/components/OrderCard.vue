@@ -49,9 +49,8 @@ export default {
 
 <style lang="scss" scoped>
 .order-card {
-  margin: 5px;
   padding: 16px 20px;
-  width: 330px;
+  width: 100%;
   background: #E4F7FF;
   border-radius: 8px;
 
