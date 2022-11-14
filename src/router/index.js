@@ -27,6 +27,10 @@ const routes = [{
     path: '/icons',
     name: 'icons',
     component: () => import('@/components/pages/icons/Icons')
+  }, {
+    path: '/categories',
+    name: 'categories',
+    component: () => import('@/components/pages/categories/Categories')
   }]
 }]
 

@@ -14,6 +14,9 @@ export default {
         },
         updateCategoriesProduct(productId, categories) {
             return categoriesStore.updateCategoriesProduct(productId, categories)
+        },
+        updateCategory(category) {
+            return categoriesStore.updateCategory(category)
         }
     }
 }

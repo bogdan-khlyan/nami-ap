@@ -31,6 +31,11 @@ export default defineStore({
         },
         removeProductFromCategory(categoryId, productId) {
             return axios.delete(`/api/admin/product/${productId}/category/${categoryId}`)
+        },
+        async updateCategory(category) {
+            const response = await axios.patch(`/api/admin/product/category/${category._id}`, category)
+            const index = this.categories.findIndex(item => item._id === category._id)
+            this.categories[index] = response.data.category
         }
     },
 })
