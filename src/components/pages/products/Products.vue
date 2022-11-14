@@ -18,6 +18,7 @@
             :value="item._id"
         />
       </el-select>
+      <el-checkbox v-model="filters.onlyActive">Только активные</el-checkbox>
       <el-button
           class="products__header--btn"
           type="primary" icon="plus"
@@ -75,7 +76,8 @@ export default {
       loading: null,
       filters: {
         title: null,
-        category: null
+        category: null,
+        onlyActive: true
       }
     }
   },
@@ -88,6 +90,10 @@ export default {
     },
     productsFiltered() {
       let filtered = this.products
+      if (this.filters.onlyActive) {
+        filtered = filtered
+            .filter(product => product.visible)
+      }
       if (this.filters.category) {
         filtered = filtered
             .filter(product => !!this.selectedCategory.productIds.find(productId => productId === product._id))
@@ -122,6 +128,7 @@ export default {
   &__header {
     margin-bottom: 10px;
     display: flex;
+    align-items: center;
     width: 100%;
     :deep(.el-input) {
       width: 300px;
