@@ -10,26 +10,26 @@
 </template>
 
 <script>
-import iconsMixin from "@/store/icons/icons.mixin";
 import BaseUploadImages from "@/components/common/BaseUploadImages";
+import iconsMixin from "@/api/icons/icons.mixin";
 
 export default {
   name: 'icons',
   mixins: [iconsMixin],
   components: { BaseUploadImages },
   async created() {
-    await this.getIcons()
+    await this.$icons.getIcons()
   },
   methods: {
     async handleInputIcons(files) {
       const promises = []
       Array.from(files).forEach(file => {
-        promises.push(this.uploadIcon(file))
+        promises.push(this.$icons.uploadIcon(file))
       })
       await Promise.all(promises)
     },
     handleDeleteIcon(icon) {
-      this.deleteIcon(icon.filename)
+      this.$icons.deleteIcon(icon.filename)
     }
   }
 }

@@ -25,5 +25,7 @@ app.use(router)
 
 import productsService from "@/api/products/products.service";
 import categoriesService from "@/api/categories/categories.service";
+import iconsService from "@/api/icons/icons.service";
 app.config.globalProperties.$products = productsService()
 app.config.globalProperties.$categories = categoriesService()
+app.config.globalProperties.$icons = iconsService()

@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import iconsMixin from "@/store/icons/icons.mixin";
+
+import iconsMixin from "@/api/icons/icons.mixin";
 
 export default {
   name: 'base-select-icon',

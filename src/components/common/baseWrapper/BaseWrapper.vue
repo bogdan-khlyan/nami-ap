@@ -21,7 +21,7 @@
 <script>
 import BaseHeader from "@/components/common/baseWrapper/BaseHeader";
 import BaseSidebar from "@/components/common/baseWrapper/BaseSidebar";
-import iconsMixin from "@/store/icons/icons.mixin";
+import iconsMixin from "@/api/icons/icons.mixin";
 
 export default {
   name: 'base-wrapper',
@@ -34,7 +34,7 @@ export default {
             this.$router.push('/login')
           }
         })
-    this.getIcons()
+    this.$icons.getIcons()
   }
 }
 </script>
