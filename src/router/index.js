@@ -24,10 +24,6 @@ const routes = [{
     name: 'product',
     component: () => import('@/components/pages/productEditor/ProductEditor')
   }, {
-    path: '/icons',
-    name: 'icons',
-    component: () => import('@/components/pages/icons/Icons')
-  }, {
     path: '/categories',
     name: 'categories',
     component: () => import('@/components/pages/categories/Categories')
@@ -35,6 +31,10 @@ const routes = [{
     path: '/news/:newId',
     name: 'new-editor',
     component: () => import('@/components/pages/news/components/NewEditor')
+  }, {
+    path: 'settings',
+    name: 'settings',
+    component: () => import('@/components/pages/settings/Settings')
   }]
 }]
 
