@@ -7,3 +7,9 @@
 .el-button {
   height: 40px;
 }
+
+.el-table__cell {
+  .cell {
+    word-break: break-word;
+  }
+}

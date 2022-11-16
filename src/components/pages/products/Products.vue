@@ -33,12 +33,58 @@
         <el-table-column
             property="title"
             label="Наименование"
+            width="200px"
+        />
+        <el-table-column
+            class-name="products__table--description"
+            property="description"
+            label="Описание"
             width="auto"
         />
         <el-table-column
+            property="title"
+            label="Варианты"
+            width="300px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'VARIANT'">
+              {{ scope.row.variants.map(item => item.title).join('/') }}
+            </span>
+            <span v-else>Обычный</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            property="weight"
+            label="Вес"
+            width="120px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'SINGLE'">
+              {{ scope.row.weight }}
+            </span>
+            <span v-else>
+              {{ scope.row.variants.map(item => item.weight).join('/') }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            property="cost"
+            label="Стоимость"
+            width="120px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'SINGLE'">
+              {{ scope.row.cost }}
+            </span>
+            <span v-else>
+              {{ scope.row.variants.map(item => item.cost).join('/') }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
             property="visible"
             label="Статус"
-            width="auto"
+            width="120px"
         >
           <template #default="scope">
             <el-switch
@@ -136,6 +182,16 @@ export default {
     }
     &--btn {
       margin-left: auto;
+    }
+  }
+  &__table {
+    :deep(.products__table--description) {
+      .cell {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
     }
   }
 }
