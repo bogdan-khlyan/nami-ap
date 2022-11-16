@@ -1,7 +1,7 @@
 <template>
   <div class="base-sidebar">
     <div class="base-sidebar__logo">
-      <img src="@/assets/images/logo.png" alt="">
+      <logo-vertical-icon/>
     </div>
     <div class="base-sidebar__btn-collapse">
       <button>
@@ -28,10 +28,14 @@ import IconProduct from "@/components/common/icons/IconProduct";
 import IconGrid from "@/components/common/icons/IconGrid";
 import IconUser from "@/components/common/icons/IconUser";
 import IconDashboard from "@/components/common/icons/IconDashboard";
+import LogoVerticalIcon from "@/components/common/icons/LogoVerticalIcon";
 
 export default {
   name: 'base-sidebar',
-  components: { IconArrow, IconProduct, IconGrid, IconUser, IconDashboard },
+  components: {
+    IconArrow, IconProduct, IconGrid,
+    IconUser, IconDashboard, LogoVerticalIcon
+  },
   props: {
     expand: { type: Boolean }
   },
@@ -65,9 +69,9 @@ export default {
 
   &__logo {
     padding-bottom: 6px;
-    > img {
-      width: 84px;
-      height: 84px;
+    :deep(svg) {
+      display: block;
+      margin: 8px auto;
     }
   }
 
