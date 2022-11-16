@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import categoriesMixin from "@/store/categories/categories.mixin";
+import categoriesMixin from "@/api/categories/categories.mixin";
 
 export default {
   name: 'categories',
@@ -54,12 +54,12 @@ export default {
     }
   },
   created() {
-    this.getCategories()
+    this.$categories.getCategories()
   },
   methods: {
     updateCategoryVisible(category) {
       this.loading = category._id
-      this.updateCategory({
+      this.$categories.updateCategory({
         _id: category._id,
         visible: !category.visible
       }).finally(() => this.loading = null)

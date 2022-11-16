@@ -96,12 +96,12 @@
 
 <script>
 import BaseLabel from "@/components/common/BaseLabel";
-import categoriesMixin from "@/store/categories/categories.mixin";
 import BaseCard from "@/components/common/BaseCard";
 import Ingredients from "@/components/pages/productEditor/components/Ingredients";
 import Variants from "@/components/pages/productEditor/components/Variants";
-import productsMixin from "@/api/products/products.mixin";
 import BaseUploadImages from "@/components/common/BaseUploadImages";
+import categoriesMixin from "@/api/categories/categories.mixin";
+import productsMixin from "@/api/products/products.mixin";
 import {useVuelidate} from "@vuelidate/core/dist/index.esm";
 import {maxLength, minLength, required} from "@vuelidate/validators";
 
@@ -188,7 +188,7 @@ export default {
           ingredients: this.product.ingredients,
           visible: false,
         })
-        await this.updateCategoriesProduct(created._id, this.product.categories)
+        await this.$categories.updateCategoriesProduct(created._id, this.product.categories)
         await this.$refs.variants.createVariants(created._id)
         // this.$router.push(`/products/${created._id}`)
         window.location.href = `/products/${created._id}` // TODO ...
@@ -199,7 +199,7 @@ export default {
           ingredients: this.product.ingredients,
           visible: this.product.visible
         })
-        await this.updateCategoriesProduct(updated._id, this.product.categories)
+        await this.$categories.updateCategoriesProduct(updated._id, this.product.categories)
         await this.$refs.variants.updateVariants(updated._id)
       }
     },
@@ -216,7 +216,7 @@ export default {
           })
           const promises = []
           promises.push(
-              this.updateCategoriesProduct(created._id, this.product.categories),
+              this.$categories.updateCategoriesProduct(created._id, this.product.categories),
               this.$products.putImagesForSingleProduct(created._id, this.product.images.map(image => image.file))
           )
           this.$notify.success({ title: 'Продукт успешно создан!' })
@@ -237,7 +237,7 @@ export default {
                 ingredients: this.product.ingredients,
                 visible: this.product.visible
               }),
-              this.updateCategoriesProduct(this.product._id, this.product.categories),
+              this.$categories.updateCategoriesProduct(this.product._id, this.product.categories),
           )
           const uploadImages = this.product.images
               .filter(image => !!image.file)

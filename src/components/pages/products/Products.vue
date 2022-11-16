@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import categoriesMixin from "@/store/categories/categories.mixin";
 import productsMixin from "@/api/products/products.mixin";
+import categoriesMixin from "@/api/categories/categories.mixin";
 
 export default {
   name: 'products',
@@ -110,7 +110,7 @@ export default {
   },
   created() {
     this.$products.getProducts()
-    this.getCategories()
+    this.$categories.getCategories()
   },
   methods: {
     updateProductStatus(product) {
