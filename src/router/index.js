@@ -7,11 +7,11 @@ const routes = [{
 }, {
   path: '/',
   component: () => import('@/components/common/baseWrapper/BaseWrapper'),
-  children: [{
+  children: [/*{
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/components/pages/dashboard/Dashboard')
-  }, {
+  },*/ {
     path: '/users',
     name: 'users',
     component: () => import('@/components/pages/users/Users')

@@ -70,11 +70,9 @@
 
 <script>
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
-import usersMixin from "@/store/users/users.mixin";
 
 export default {
   name: 'products',
-  mixins: [usersMixin],
   components: { BaseUserAvatar },
   data() {
     return {
@@ -95,7 +93,7 @@ export default {
     },
     async getUsersPage(page) {
       this.loading = true
-      const { total, data } = await this.getUsers(page)
+      const { total, data } = await this.$users.getUsers(page)
       this.users = data
       this.total = total
       this.loading = false
