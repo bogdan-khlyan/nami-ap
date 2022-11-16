@@ -52,6 +52,7 @@ export default {
 <style lang="scss" scoped>
 .base-upload-images {
   display: flex;
+  flex-wrap: wrap;
   &__image {
     position: relative;
 
