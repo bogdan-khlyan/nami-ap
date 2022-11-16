@@ -66,7 +66,7 @@
 
 <script>
 import categoriesMixin from "@/store/categories/categories.mixin";
-import productsMixin from "@/store/products/products.mixin";
+import productsMixin from "@/api/products/products.mixin";
 
 export default {
   name: 'products',
@@ -109,13 +109,13 @@ export default {
     }
   },
   created() {
-    this.getProducts()
+    this.$products.getProducts()
     this.getCategories()
   },
   methods: {
     updateProductStatus(product) {
       this.loading = product._id
-      this.updateProduct(product._id, product.type, { visible: product.visible })
+      this.$products.updateProduct(product._id, product.type, { visible: product.visible })
           .then(() => this.loading = null)
     }
   }

@@ -21,3 +21,7 @@ app.use(router)
    .use(pinia)
    .use(ElementPlus, { locale: ru })
    .mount('#app')
+
+
+import productsService from "@/api/products/products.service";
+app.config.globalProperties.$products = productsService()

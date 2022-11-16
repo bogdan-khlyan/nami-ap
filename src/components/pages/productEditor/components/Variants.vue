@@ -19,7 +19,7 @@ import BaseUploadImage from "@/components/common/BaseUploadImage";
 import BaseSelectIcon from "@/components/common/BaseSelectIcon";
 import BaseLabel from "@/components/common/BaseLabel";
 import Variant from "@/components/pages/productEditor/components/Variant";
-import productsMixin from "@/store/products/products.mixin";
+import productsMixin from "@/api/products/products.mixin";
 
 export default {
   name: 'variants',
@@ -52,7 +52,7 @@ export default {
       const promises = []
       this.variants.forEach(variant => {
         promises.push(
-            this.createVariantForProduct(productId, {
+            this.$products.createVariantForProduct(productId, {
               image: variant.image?.file,
               title: variant.title,
               icon: variant.icon,
@@ -69,7 +69,7 @@ export default {
       this.variants.forEach(variant => {
         promises.push(
             variant._id ?
-                this.updateVariantForProduct(productId, variant._id, {
+                this.$products.updateVariantForProduct(productId, variant._id, {
                   image: variant.image?.file,
                   title: variant.title,
                   icon: variant.icon,
@@ -77,7 +77,7 @@ export default {
                   weight: variant.weight,
                   visible: variant.visible
                 }) :
-                this.createVariantForProduct(productId, {
+                this.$products.createVariantForProduct(productId, {
                   image: variant.image?.file,
                   title: variant.title,
                   icon: variant.icon,
