@@ -15,7 +15,7 @@ export default () => ({
     },
     async updateCategoriesProduct(productId, categories) {
         const promises = []
-        this.categories.forEach(category => {
+        this.store.categories.forEach(category => {
             if (!!category.productIds.find(item => item === productId)) { // продукт есть в этой категории
                 if (!categories.find(item => item === category._id)) { // категории нет в списке тех в которых должен быть этот продукт
                     promises.push(this.removeProductFromCategory(category._id, productId))
