@@ -2,12 +2,14 @@
   <el-table
       v-loading="loading"
       :data="data"
-      class="order__table">
+      table-layout="fixed"
+      class="order__table"
+      ref="tableData">
     <el-table-column
         fixed
         prop="number"
         label="Номер"
-        width="100">
+        width="70">
     </el-table-column>
     <el-table-column
         prop="createdAt"
@@ -27,28 +29,27 @@
     <el-table-column
         prop="address"
         label="Адрес доставки"
-        width="200">
+        width="180">
     </el-table-column>
     <el-table-column
         label="Статус"
-        width="120">
+        width="160">
       <template v-slot="scope">
-        <el-dropdown @command="handleCommand(scope.row, $event)">
-          <span :class="{ new: scope.row.condition === 'NEW', reject: scope.row.condition === 'REJECT'}"
-                class="el-dropdown-link">
-            {{ getCondition(scope.row.condition) }} <el-icon class="el-icon--right"><arrow-down/></el-icon>
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="NEW">Новый</el-dropdown-item>
-              <el-dropdown-item command="IN_PROGRESS">В прогрессе</el-dropdown-item>
-              <el-dropdown-item command="IS_DELIVERED">Доставляется</el-dropdown-item>
-              <el-dropdown-item command="DONE">Готовый</el-dropdown-item>
-              <el-dropdown-item command="REJECT">Отклоненный</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-
+        <el-select v-model="scope.row.condition"
+                   @change="onChangeStatus(scope.row)"
+                   :class="{ done: scope.row.condition === 'DONE',
+                   new: scope.row.condition === 'NEW',
+                   reject: scope.row.condition === 'REJECT',
+                   delivered: scope.row.condition === 'IS_DELIVERED'}"
+                   class="order__table-custom-select"
+                   size="large">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
       </template>
     </el-table-column>
     <el-table-column
@@ -57,72 +58,131 @@
         width="120">
     </el-table-column>
     <el-table-column
-        label=""
         width="120">
       <template v-slot="scope">
-        <el-button @click="handleClick" :key="scope.row._id" type="primary" size="small">Detail</el-button>
+        <el-button @click="handleClick(scope.row)" :key="scope.row._id" type="primary" size="small">Детали
+          <el-icon class="el-icon--right">
+            <arrow-down/>
+          </el-icon>
+        </el-button>
+      </template>
+    </el-table-column>
+    <el-table-column
+        type="expand">
+      <template
+          v-slot="scope">
+        {{ scope.row._id }}
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
+import {ElMessage} from 'element-plus'
+
 export default {
   name: "OrderTable",
   props: {
     data: {type: Array},
     loading: {type: Boolean}
   },
+  data() {
+    return {
+      selectedStatus: null,
+      options: [
+        {value: 'NEW', label: 'Новый'},
+        {value: 'IN_PROGRESS', label: 'В прогрессе'},
+        {value: 'IS_DELIVERED', label: 'Доставляется'},
+        {value: 'DONE', label: 'Завершен'},
+        {value: 'REJECT', label: 'Отклоненный'},
+      ]
+    }
+  },
   methods: {
-    getCondition(condition) {
-      switch (condition) {
-        case 'NEW':
-          return 'Новый'
-        case 'IN_PROGRESS':
-          return 'В прогрессе'
-        case 'IS_DELIVERED':
-          return 'Доставляется'
-        case 'DONE':
-          return 'Завершен'
-        case 'REJECT':
-          return 'Отклоненный'
-        default:
-          return 'Новый'
-      }
+    handleClick(row) {
+      this.$refs.tableData.toggleRowExpansion(row)
+      this.$orders.getOrdersByPhone(row.number)
     },
-    handleClick() {
-      console.log('test')
-    },
-    handleCommand(order, $event) {
-      this.$orders.changeStatusOrder(order, $event)
+    onChangeStatus(order) {
+      this.$orders.changeStatusOrder(order).then(() => {
+        ElMessage({
+          showClose: false,
+          message: 'Статус успешно изменен',
+          type: 'success',
+        })
+      })
     }
   }
 }
 </script>
 
+<style lang="scss">
+.el-table__expand-column {
+  display: none;
+}
+
+.order {
+  &__table {
+    & .el-select {
+      .el-input__wrapper {
+        border-radius: 50px;
+      }
+
+      &.new {
+        & .el-input__wrapper {
+          background: #f8c646;
+        }
+
+        & .el-input__inner {
+          color: #49422b;
+        }
+      }
+
+      &.delivered {
+        & .el-input__wrapper {
+          background: #b1b3b8;
+        }
+
+        & .el-input__inner {
+          color: #49422b;
+        }
+      }
+
+      &.done {
+        & .el-input__wrapper {
+          background: #E9FFED;
+        }
+
+        & .el-input__inner {
+          color: #31AA27;
+        }
+      }
+
+      &.reject {
+        & .el-input__wrapper {
+          background: #F56C6C;
+        }
+
+        & .el-input__inner {
+          color: #303133;
+        }
+      }
+    }
+  }
+}
+</style>
+
 <style scoped lang="scss">
 .order {
   &__table {
-    width: 100%;
-  }
+    .el-icon.el-icon--right {
+      transition-duration: 0.3s;
+      transition-delay: 0.3s;
 
-  //& .el-dropdown-link.new {
-  //  background: blue;
-  //}
-
-  & .el-dropdown-link.done {
-    background: #E9FFED;
-    color: #31AA27;
-  }
-
-  & .el-dropdown-link.reject {
-    background: red;
-    color: black;
-  }
-
-  & .el-dropdown-link {
-    padding: 10px 24px;
-    border-radius: 50px;
+      &.reverse {
+        transform: rotate(180deg);
+      }
+    }
   }
 }
 </style>
