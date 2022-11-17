@@ -12,20 +12,20 @@ export default () => ({
             throw error
         }
     },
-    async changeStatusOrder(order, status) {
+    async changeStatusOrder(order) {
         try {
-            return await http.patch(`/api/admin/order/${order._id}/condition`, {condition: status})
+            return await http.patch(`/api/admin/order/${order.number}/condition`, {condition: order.condition})
         } catch (error) {
             console.log(error)
             throw error
         }
     },
-    // async getOrdersByPhone(phone) {
-    //     try {
-    //         return await http.get(`/api/order/${phone}`)
-    //     } catch (error) {
-    //         console.log(error)
-    //         throw error
-    //     }
-    // }
+    async getOrdersByPhone(phone) {
+        try {
+            return await http.get(`/api/admin/order/${phone}`)
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
 })
