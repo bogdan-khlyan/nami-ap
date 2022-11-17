@@ -6,7 +6,21 @@ export default () => ({
             let params = {...pagination}
             delete params.total
 
-            return await http.get('/api/admin/orders', {params: params})
+            let {data, pages, total} = await http.get('/api/admin/orders', {params: params})
+
+            data = data.map(item => {
+                return {
+                    ...item,
+                    weight: null,
+                    products: null,
+                    clientId: null,
+                    updatedAt: null,
+                    productsSum: null,
+                    deliveryCost: null
+                }
+            })
+
+            return {data, pages, total}
         } catch (error) {
             console.log(error)
             throw error

@@ -1,10 +1,11 @@
 <template>
   <el-table
       v-loading="loading"
-      :data="data"
-      table-layout="fixed"
+      :data="dataTable"
       class="order__table"
-      ref="tableData">
+      ref="tableData"
+      style="width: 100%;"
+      @expand-change="handleClick">
     <el-table-column
         fixed
         prop="number"
@@ -29,11 +30,11 @@
     <el-table-column
         prop="address"
         label="Адрес доставки"
-        width="180">
+        width="200">
     </el-table-column>
     <el-table-column
         label="Статус"
-        width="160">
+        width="125">
       <template v-slot="scope">
         <el-select v-model="scope.row.condition"
                    @change="onChangeStatus(scope.row)"
@@ -58,20 +59,69 @@
         width="120">
     </el-table-column>
     <el-table-column
-        width="120">
-      <template v-slot="scope">
-        <el-button @click="handleClick(scope.row)" :key="scope.row._id" type="primary" size="small">Детали
-          <el-icon class="el-icon--right">
-            <arrow-down/>
-          </el-icon>
-        </el-button>
-      </template>
-    </el-table-column>
-    <el-table-column
+        width="100"
+        align="right"
         type="expand">
       <template
-          v-slot="scope">
-        {{ scope.row._id }}
+          v-slot="props">
+        <div class="order__info">
+          <el-table
+              :data="props.row.products">
+            <el-table-column
+                label="Изображение">
+              <template v-slot="scope">
+                <img v-if="scope.row.product.type === 'SINGLE'"
+                     :src="`/api/product/image/${scope.row.product.images[0]}`" alt="">
+                <img v-else
+                     :src="`/api/product/variant/image/${scope.row.variant.image}`" alt="">
+              </template>
+            </el-table-column>
+
+            <el-table-column label="Продукт">
+              <template v-slot="scope">
+                <div class="order__info-heading">{{ scope.row.product.title }}</div>
+                <div class="order__info-heading-description">{{ scope.row.product.ingredients.join(', ') }}
+                  <span>({{ scope.row.weight }} г)</span></div>
+              </template>
+            </el-table-column>
+
+            <el-table-column width="80" label="Кол-во"
+                             class-name="product-count">
+              <template v-slot="scope">
+                {{ scope.row.number }}
+              </template>
+            </el-table-column>
+            <el-table-column
+                width="80"
+                class-name="product-amount"
+                label="Сумма">
+              <template v-slot="scope">
+                <span v-if="scope.row.product.type === 'SINGLE'">{{ scope.row.product.cost }} ₽</span>
+                <span v-else>{{ scope.row.variant.cost }} ₽</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <div class="order-table-details__result">
+            <div class="order-table-details__result-item">
+              <div>Стоимость товаров</div>
+              <div>{{ props.row.productsSum }} ₽</div>
+            </div>
+            <div class="order-table-details__result-item">
+              <div>Доставка</div>
+              <div v-if="props.row.deliveryCost">{{ props.row.deliveryCost }} ₽</div>
+              <div v-else>-</div>
+            </div>
+            <div class="order-table-details__result-item">
+              <div>Итого к оплате</div>
+              <div>{{
+                  props.row.deliveryCost ? (props.row.productsSum + props.row.deliveryCost) : props.row.productsSum
+                }} ₽
+              </div>
+            </div>
+          </div>
+
+        </div>
       </template>
     </el-table-column>
   </el-table>
@@ -83,7 +133,7 @@ import {ElMessage} from 'element-plus'
 export default {
   name: "OrderTable",
   props: {
-    data: {type: Array},
+    dataTable: {type: Array},
     loading: {type: Boolean}
   },
   data() {
@@ -99,9 +149,8 @@ export default {
     }
   },
   methods: {
-    handleClick(row) {
-      this.$refs.tableData.toggleRowExpansion(row)
-      this.$orders.getOrdersByPhone(row.number)
+    handleClick(event) {
+      this.$emit('detailExpansionOrder', event)
     },
     onChangeStatus(order) {
       this.$orders.changeStatusOrder(order).then(() => {
@@ -117,8 +166,18 @@ export default {
 </script>
 
 <style lang="scss">
-.el-table__expand-column {
-  display: none;
+.el-table__expand-icon {
+  & .el-icon {
+    transition-duration: 0.2s;
+  }
+
+  &--expanded {
+    transform: none !important;
+
+    & .el-icon {
+      transform: rotate(90deg);
+    }
+  }
 }
 
 .order {
@@ -174,6 +233,12 @@ export default {
 
 <style scoped lang="scss">
 .order {
+  &__info {
+    margin-left: auto;
+    width: 100%;
+    max-width: 557px
+  }
+
   &__table {
     .el-icon.el-icon--right {
       transition-duration: 0.3s;

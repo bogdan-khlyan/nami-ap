@@ -4,13 +4,14 @@
       <el-col :span="16">
         <div class="order__wrap-input">
           <el-input placeholder="Поиск по номеру телефона" v-model="findFilter.phone"></el-input>
-          <el-button @click="onFindByPhone" type="primary">Поиск</el-button>
+          <el-button type="primary">Поиск</el-button>
           <el-input placeholder="Поиск по адресу" v-model="findFilter.address"></el-input>
         </div>
       </el-col>
     </el-row>
 
-    <order-table :data="tableData" :loading="loading"/>
+    <order-table :dataTable="tableData" :loading="loading" @detailExpansionOrder="orderExpansion($event)"
+                 ref="orderTable"/>
 
     <pagination :pagination="pagination" @changePagination="onChangePagination" class="order__pagination"/>
   </div>
@@ -46,8 +47,26 @@ export default {
     }
   },
   methods: {
-    onFindByPhone() {
-      // this.$orders.getOrdersByPhone(this.findFilter.phone)
+    orderExpansion(event) {
+      if (!this.tableData.find(item => item._id === event._id).products) {
+        // this.loading = true
+        // let findElement = this.tableData.find(item => {
+        //   return item._id === event.order._id
+        // })
+        this.$orders.getOrdersByPhone(event.number).then((response) => {
+          this.tableData.forEach((item, key) => {
+            if (item._id === response.order._id) {
+              this.tableData[key].weight = response.order.weight
+              this.tableData[key].products = response.order.products
+              this.tableData[key].clientId = response.order.clientId
+              this.tableData[key].updatedAt = response.order.updatedAt
+              this.tableData[key].productsSum = response.order.productsSum
+              this.tableData[key].deliveryCost = response.order.deliveryCost
+            }
+          })
+          console.log(this.tableData)
+        })
+      }
     },
     onChangePagination(event) {
       this.pagination = event
@@ -69,7 +88,7 @@ export default {
 
       this.loading = false
     },
-  },
+  }
 }
 </script>
 
