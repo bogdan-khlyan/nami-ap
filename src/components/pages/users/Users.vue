@@ -2,14 +2,18 @@
   <div class="users" v-loading="loading">
     <div class="users__header">
       <el-input
-          v-model="filters.email"
-          placeholder="Поиск по email"
+          v-model="filters.phone"
+          placeholder="Поиск по телефону"
           clearable
           disabled
       />
+      <el-checkbox
+          v-model="filters.onlyRegistered"
+          @change="changeOnlyRegistered"
+      >Только зарегистрированные</el-checkbox>
       <el-button
           class="users__header--btn"
-          type="primary" icon="plus"
+          type="primary" icon="promotion"
           disabled
       >Отправить сообщение</el-button>
     </div>
@@ -22,6 +26,15 @@
         <el-table-column width="60">
           <template #default="scope">
             <base-user-avatar :avatar="scope.row.avatar"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+            property="role"
+            width="40"
+        >
+          <template #default="scope">
+            <el-icon v-if="scope.row.role === 'USER'" color="green"><success-filled /></el-icon>
+            <el-icon v-else><circle-close-filled /></el-icon>
           </template>
         </el-table-column>
         <el-table-column
@@ -78,7 +91,8 @@ export default {
     return {
       loading: true,
       filters: {
-        email: null
+        phone: null,
+        onlyRegistered: false
       },
       users: [],
       total: 0
@@ -91,9 +105,12 @@ export default {
     changePage(page) {
       this.getUsersPage(page)
     },
+    changeOnlyRegistered() {
+      this.getUsersPage(1)
+    },
     async getUsersPage(page) {
       this.loading = true
-      const { total, data } = await this.$users.getUsers(page)
+      const { total, data } = await this.$users.getUsers(page, 20, this.filters.onlyRegistered ? 'CUSTOMER' : null)
       this.users = data
       this.total = total
       this.loading = false
@@ -108,6 +125,7 @@ export default {
   &__header {
     margin-bottom: 10px;
     display: flex;
+    align-items: center;
     width: 100%;
     :deep(.el-input) {
       width: 300px;
