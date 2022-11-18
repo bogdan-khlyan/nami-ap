@@ -33,9 +33,13 @@ export default {
 </script>
 
 <style lang="scss">
-.el-pager li.is-active {
-  color: #FFFFFF;
-  background: #1857F3;
-  border-radius: 50px;
+.order__pagination {
+  margin-bottom: 8px;
+  
+  & .el-pager li.is-active {
+    color: #FFFFFF;
+    background: #1857F3;
+    border-radius: 50px;
+  }
 }
 </style>
