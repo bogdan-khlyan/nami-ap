@@ -183,6 +183,19 @@ export default {
 </script>
 
 <style lang="scss">
+.el-table__header {
+  border-radius: 2px;
+  border-bottom: 1px solid #A7BFFA;
+}
+
+.el-table td.el-table__cell, .el-table th.el-table__cell.is-leaf {
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.el-table th.el-table__cell {
+  border-bottom: none !important;
+}
+
 .el-table__expand-icon {
   & .el-icon {
     transition-duration: 0.2s;
