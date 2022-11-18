@@ -6,21 +6,19 @@ export default () => ({
             let params = {...pagination}
             delete params.total
 
-            let {data, pages, total} = await http.get('/api/admin/orders', {params: params})
+            let {data, page, total} = await http.get('/api/admin/orders', {params: params})
 
-            data = data.map(item => {
-                return {
-                    ...item,
-                    weight: null,
-                    products: null,
-                    clientId: null,
-                    updatedAt: null,
-                    productsSum: null,
-                    deliveryCost: null
-                }
+            let promises = []
+            data.forEach((item) => {
+                promises.push(this.getOrdersByPhone(item.number))
             })
 
-            return {data, pages, total}
+            return Promise.all(promises).then(values => {
+                const data = values.map((item) => {
+                    return item.order
+                })
+                return {data, page, total}
+            })
         } catch (error) {
             console.log(error)
             throw error
