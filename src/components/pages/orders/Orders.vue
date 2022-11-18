@@ -10,7 +10,7 @@
       </el-col>
     </el-row>
 
-    <order-table :dataTable="tableData" :loading="loading" ref="orderTable"/>
+    <order-table :dataTable="tableData" :loading="loading"/>
 
     <pagination :pagination="pagination" @changePagination="onChangePagination" class="order__pagination"/>
   </div>
