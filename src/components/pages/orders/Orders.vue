@@ -4,14 +4,13 @@
       <el-col :span="16">
         <div class="order__wrap-input">
           <el-input placeholder="Поиск по номеру телефона" v-model="findFilter.phone"></el-input>
-          <el-button type="primary">Поиск</el-button>
           <el-input placeholder="Поиск по адресу" v-model="findFilter.address"></el-input>
+          <el-button type="primary">Поиск</el-button>
         </div>
       </el-col>
     </el-row>
 
-    <order-table :dataTable="tableData" :loading="loading" @detailExpansionOrder="orderExpansion($event)"
-                 ref="orderTable"/>
+    <order-table :dataTable="tableData" :loading="loading" ref="orderTable"/>
 
     <pagination :pagination="pagination" @changePagination="onChangePagination" class="order__pagination"/>
   </div>
@@ -47,27 +46,6 @@ export default {
     }
   },
   methods: {
-    orderExpansion(event) {
-      if (!this.tableData.find(item => item._id === event._id).products) {
-        // this.loading = true
-        // let findElement = this.tableData.find(item => {
-        //   return item._id === event.order._id
-        // })
-        this.$orders.getOrdersByPhone(event.number).then((response) => {
-          this.tableData.forEach((item, key) => {
-            if (item._id === response.order._id) {
-              this.tableData[key].weight = response.order.weight
-              this.tableData[key].products = response.order.products
-              this.tableData[key].clientId = response.order.clientId
-              this.tableData[key].updatedAt = response.order.updatedAt
-              this.tableData[key].productsSum = response.order.productsSum
-              this.tableData[key].deliveryCost = response.order.deliveryCost
-            }
-          })
-          console.log(this.tableData)
-        })
-      }
-    },
     onChangePagination(event) {
       this.pagination = event
       this.getOrders()
@@ -75,7 +53,7 @@ export default {
     async getOrders() {
       this.loading = true
 
-      const {total, data} = await this.$orders.getOrders(this.pagination)
+      const {data, total } = await this.$orders.getOrders(this.pagination)
 
       if (!this.pagination.total) this.pagination.total = total
       this.tableData = data.map(item => {
@@ -94,7 +72,7 @@ export default {
 
 <style lang="scss">
 .el-table__body {
-  height: 570px;
+  height: auto;
 }
 .el-table__body,
 .el-table__header {
