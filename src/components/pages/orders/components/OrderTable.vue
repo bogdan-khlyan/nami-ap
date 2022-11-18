@@ -80,8 +80,18 @@
             <el-table-column label="Продукт">
               <template v-slot="scope">
                 <div class="order__info-heading">{{ scope.row.product.title }}</div>
-                <div class="order__info-heading-description">{{ scope.row.product.ingredients.join(', ') }}
+                <div v-if="!scope.row.variant" class="order__info-heading-description">
+                  {{ scope.row.product.ingredients.join(', ') }}
                   <span>({{ scope.row.weight }} г)</span></div>
+                <div v-else class="order__info-heading-description">
+                  <div class="selected-variant">
+                    <label>С начинкой:</label>
+                    <div class="selected-variant__content">
+                      <img :src="`/api/product/variant/icon/${scope.row.variant.icon}`" alt="">
+                      <span>{{ scope.row.variant.title }}</span>
+                    </div>
+                  </div>
+                </div>
               </template>
             </el-table-column>
 
@@ -245,6 +255,32 @@ export default {
     width: 100%;
     max-width: 557px;
 
+    & .selected-variant {
+      margin-top: 5px;
+
+      > label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      &__content {
+        display: flex;
+        align-items: center;
+
+        > img {
+          width: 24px;
+          height: 24px;
+          margin-right: 6px;
+        }
+
+        > span {
+          font-family: Neucha, sans-serif;
+          font-size: 16px;
+          font-weight: 700;
+        }
+      }
+    }
+
     &-img {
       width: 60px;
       height: 60px;
@@ -304,6 +340,9 @@ export default {
         max-width: 180px;
         width: 100%;
         justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
 
         &-item {
           display: flex;
