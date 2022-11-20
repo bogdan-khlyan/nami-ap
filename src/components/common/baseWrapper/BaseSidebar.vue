@@ -57,6 +57,7 @@ export default {
 
 <style lang="scss" scoped>
 .base-sidebar {
+  z-index: 10;
   position: fixed;
   width: 84px;
   min-height: 100vh;
