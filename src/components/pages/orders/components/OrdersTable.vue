@@ -19,6 +19,11 @@
         prop="phone"
         label="Номер телефона"
         width="145">
+      <template v-slot="scope">
+        <a :href="preparePhone(scope.row.phone)"
+           class="orders-table__phone"
+        >{{ scope.row.phone }}</a>
+      </template>
     </el-table-column>
     <el-table-column
         prop="username"
@@ -68,9 +73,11 @@
 <script>
 import OrderInfo from "@/components/pages/orders/components/OrderInfo";
 import {conditionsArray} from "@/utils/conditions";
+import phonePrepareHrefMixin from "@/mixins/phone-prepare-href.mixin";
 
 export default {
   name: "orders-table",
+  mixins: [phonePrepareHrefMixin],
   components: {OrderInfo},
   props: {
     orders: {type: Array},
@@ -94,6 +101,16 @@ export default {
 
 <style scoped lang="scss">
 .orders-table {
+
+  &__phone {
+    color: #606266;
+    text-decoration: none;
+    transition: 600ms;
+    &:hover {
+      text-decoration: underline;
+      color: #909399;
+    }
+  }
 
   &__select-condition {
     :deep(.el-input__wrapper) {
