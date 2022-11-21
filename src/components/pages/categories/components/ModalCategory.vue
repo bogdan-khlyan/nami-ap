@@ -4,6 +4,7 @@
       class="dialog-category"
       align-center
       :before-close="close"
+      @keyup.enter="onSave"
   >
     <template #header>
       <div class="dialog-category__header">
@@ -80,25 +81,26 @@ export default {
       this.category = {title: ''}
     },
     onSave() {
-      if (!this.isModeModal) {
-        this.$categories.createCategory({title: this.category.title, visible: true}).then((response) => {
-          this.$message.success({message: `Категория ${response.category.title} создана`})
-        }).finally(()=> {
-          this.close()
-        })
+      if (this.isValid) {
+        if (!this.isModeModal) {
+          this.$categories.createCategory({title: this.category.title, visible: true}).then((response) => {
+            this.$message.success({message: `Категория ${response.category.title} создана`})
+          }).finally(()=> {
+            this.close()
+          })
+        } else {
+          this.$categories.updateCategory({
+            _id: this.category._id,
+            title: this.category.title
+          }).then((response)=> {
+            this.$message.success({message: `Категория ${response.title} успешно обновлена`})
+          }).finally(()=> {
+            this.close()
+          })
+        }
       } else {
-        this.$categories.updateCategory({
-          _id: this.category._id,
-          title: this.category.title
-        }).then((response)=> {
-          this.$message.success({message: `Категория ${response.title} успешно обновлена`})
-        }).finally(()=> {
-          this.close()
-        })
+        this.$message.error({message: 'В названии категории должен быть минимум 1 символ'})
       }
-    },
-    onShowModalCreateCategory() {
-      this.isShowModal = true
     },
   }
 }
