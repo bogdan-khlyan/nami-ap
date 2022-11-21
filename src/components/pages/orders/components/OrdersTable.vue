@@ -105,10 +105,8 @@ export default {
   &__phone {
     color: #606266;
     text-decoration: none;
-    transition: 600ms;
     &:hover {
       text-decoration: underline;
-      color: #909399;
     }
   }
 
