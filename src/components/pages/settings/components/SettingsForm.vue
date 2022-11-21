@@ -9,6 +9,7 @@
     <base-label label="Скидка на все продукты">
       <el-input-number v-model="config.globalDiscountPercent" :min="0" :max="100"/>
     </base-label>
+    <el-checkbox v-model="config.globalDiscountEnabled">Показывать скидку</el-checkbox>
     <div>
       <base-label label="Информационное сообщение">
         <el-input
@@ -19,7 +20,7 @@
             placeholder="Информационное сообщение">
         </el-input>
       </base-label>
-      <el-checkbox v-model="config.infoMessageEnabled">Включить</el-checkbox>
+      <el-checkbox v-model="config.infoMessageEnabled">Показывать сообщение</el-checkbox>
     </div>
     <div>
       <el-button @click="onUpdateConfig"
