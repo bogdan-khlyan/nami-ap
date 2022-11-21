@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 
 export default defineStore({
-    id: 'settings',
+    id: 'config',
     state: () => ({
-        settings: null
+        config: null
     }),
     actions: {
-        setSettings(settings) {
-            this.settings = settings
+        setConfig(config) {
+            this.config = config
         },
     },
 })

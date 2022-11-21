@@ -35,7 +35,7 @@ export default {
           }
         })
     this.$icons.getIcons()
-    this.$settings.getConfigApp()
+    this.$config.getConfig()
   }
 }
 </script>
