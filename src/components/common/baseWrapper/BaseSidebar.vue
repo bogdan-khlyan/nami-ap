@@ -28,6 +28,7 @@ import IconProduct from "@/components/common/icons/IconProduct";
 import IconGrid from "@/components/common/icons/IconGrid";
 import IconUser from "@/components/common/icons/IconUser";
 import IconDashboard from "@/components/common/icons/IconDashboard";
+import IconOrders from "@/components/common/icons/IconOrders";
 import LogoVerticalIcon from "@/components/common/icons/LogoVerticalIcon";
 import IconSettings from "@/components/common/icons/IconSettings";
 
@@ -36,7 +37,7 @@ export default {
   components: {
     IconArrow, IconProduct, IconGrid,
     IconUser, IconDashboard, LogoVerticalIcon,
-    IconSettings
+    IconSettings, IconOrders
   },
   props: {
     expand: { type: Boolean }
