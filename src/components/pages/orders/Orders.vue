@@ -1,29 +1,55 @@
 <template>
-  <div class="order">
-    <el-row :gutter="20">
-      <el-col :span="16">
-        <div class="order__wrap-input">
-          <el-input placeholder="Поиск по номеру телефона" v-model="findFilter.phone"></el-input>
-          <el-input placeholder="Поиск по адресу" v-model="findFilter.address"></el-input>
-          <el-button type="primary">Поиск</el-button>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="orders">
+    <div class="orders__filters">
+      <el-input
+          class="orders__filters--item"
+          v-model="filters.phone"
+          placeholder="Поиск по номеру телефона"
+          disabled
+      />
+      <el-input
+          class="orders__filters--item"
+          v-model="filters.address"
+          placeholder="Поиск по адресу"
+          disabled
+      />
+      <el-select
+          class="orders__filters--item"
+          v-model="filters.condition"
+          placeholder="Фильтр по статусу"
+          size="large"
+          clearable
+          @change="getOrders"
+      >
+        <el-option
+            v-for="item in conditions" :key="item.value"
+            :label="item.name"
+            :value="item.value"
+        />
+      </el-select>
+    </div>
 
-    <order-table :dataTable="tableData" :loading="loading"/>
+    <orders-table
+        :orders="orders"
+        :loading="loading"
+    />
 
-    <pagination :pagination="pagination" @changePagination="onChangePagination" class="order__pagination"/>
+    <pagination
+        class="orders__pagination"
+        :pagination="pagination"
+        @changePagination="onChangePagination"
+    />
   </div>
 </template>
 
 <script>
-
-import OrderTable from "@/components/pages/orders/components/OrderTable"
-import Pagination from "@/components/pages/orders/components/Pagination"
+import OrdersTable from "@/components/pages/orders/components/OrdersTable"
+import Pagination from "@/components/common/BasePagination"
+import {conditionsArray} from "@/utils/conditions"
 
 export default {
-  name: "Orders",
-  components: {OrderTable, Pagination},
+  name: "orders",
+  components: {OrdersTable, Pagination},
   mounted() {
     this.getOrders()
   },
@@ -31,12 +57,15 @@ export default {
     return {
       loading: false,
 
-      findFilter: {
-        phone: "",
-        address: ""
+      conditions: conditionsArray,
+
+      filters: {
+        phone: '',
+        address: '',
+        condition: null
       },
 
-      tableData: [],
+      orders: [],
 
       pagination: {
         page: 1,
@@ -53,14 +82,15 @@ export default {
     async getOrders() {
       this.loading = true
 
-      const {data, total } = await this.$orders.getOrders(this.pagination)
+      const { data, total } = await this.$orders
+          .getOrders(this.pagination.limit, this.pagination.page, this.filters.condition)
 
-      if (!this.pagination.total) this.pagination.total = total
-      this.tableData = data.map(item => {
+      this.pagination.total = total
+      this.orders = data.map(item => {
         return {
           ...item,
-          cost: item.cost.toLocaleString().replaceAll(" ", " ") + ' ₽',
-          createdAt: new Date(item.createdAt).toLocaleDateString('pt-PT').replaceAll('/', '.')
+          cost: item.cost.toLocaleString().replaceAll(' ', ' ') + ' ₽',
+          createdAt: new Date(item.createdAt).toLocaleDateString()
         }
       })
 
@@ -70,31 +100,26 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.el-table__body {
-  height: auto;
-}
-.el-table__body,
-.el-table__header {
-  width: 100% !important;
-}
-</style>
-
 <style scoped lang="scss">
-.order {
+.orders {
   padding: 16px;
 
-  &__wrap-input {
+  &__filters {
     margin-top: 16px;
     margin-bottom: 22px;
     display: flex;
     gap: 10px;
+    &--item {
+      width: 300px;
+    }
   }
 
-  &__pagination {
-    margin-top: 60px;
-    display: flex;
-    justify-content: center;
+  :deep(.el-table__body) {
+    height: auto;
   }
+  :deep(.el-table__body), :deep(.el-table__header) {
+    width: 100% !important;
+  }
+
 }
 </style>

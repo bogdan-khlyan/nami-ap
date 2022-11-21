@@ -1,24 +1,14 @@
 import {http} from "@/api/axios.config";
 
 export default () => ({
-    async getOrders(pagination) {
+    async getOrders(limit = 10, page = 1, condition) {
         try {
-            let params = {...pagination}
-            delete params.total
-
-            let {data, page, total} = await http.get('/api/admin/orders', {params: params})
-
-            let promises = []
-            data.forEach((item) => {
-                promises.push(this.getOrdersByPhone(item.number))
-            })
-
-            return Promise.all(promises).then(values => {
-                const data = values.map((item) => {
-                    return item.order
-                })
-                return {data, page, total}
-            })
+            const query = {
+                limit,
+                page,
+                fCondition: condition ? condition : null
+            }
+            return await http.get('/api/admin/orders', { params: query })
         } catch (error) {
             console.log(error)
             throw error
@@ -32,9 +22,10 @@ export default () => ({
             throw error
         }
     },
-    async getOrdersByPhone(phone) {
+    async getOrder(number) {
         try {
-            return await http.get(`/api/admin/order/${phone}`)
+            const { order } = await http.get(`/api/admin/order/${number}`)
+            return order
         } catch (error) {
             console.log(error)
             throw error

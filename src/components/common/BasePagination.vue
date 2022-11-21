@@ -1,5 +1,5 @@
 <template>
-  <div class="order__pagination">
+  <div class="base-pagination">
     <el-pagination
         v-model:current-page="page"
         v-model:page-size="pageSize"
@@ -14,9 +14,9 @@
 
 <script>
 export default {
-  name: "Pagination",
+  name: "base-pagination",
   props: {
-    pagination: {type: Object}
+    pagination: { type: Object }
   },
   data() {
     return {
@@ -32,14 +32,17 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.order__pagination {
-  margin-bottom: 8px;
-  
-  & .el-pager li.is-active {
-    color: #FFFFFF;
-    background: #1857F3;
+<style scoped lang="scss">
+.base-pagination {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  :deep(.el-pager li.is-active) {
     border-radius: 50px;
+    background: #1857F3;
+    color: #FFFFFF;
   }
 }
 </style>

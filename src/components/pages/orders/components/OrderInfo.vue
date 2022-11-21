@@ -1,7 +1,8 @@
 <template>
-  <div class="order__info">
+  <div class="order__info"
+       v-loading="loading">
     <el-table
-        :data="props.row.products">
+        :data="order.products">
       <el-table-column width="80">
         <template v-slot="scope">
           <img v-if="scope.row.product.type === 'SINGLE'"
@@ -51,27 +52,27 @@
     <div class="order__info-details">
       <div class="order__info-details__address-wrap">
         <div class="order__info-details__delivery-method">
-          Способ доставки: {{ props.row.delivery ? 'Курьер' : 'Не курьер' }}
+          Способ доставки: {{ order.delivery ? 'Курьер' : 'Не курьер' }}
         </div>
         <div class="order__info-details__address">
-          {{ props.row.address }}
+          {{ order.address }}
         </div>
       </div>
 
       <div class="order__info-details__result">
         <div class="order__info-details__result-item">
           <div>Стоимость товаров</div>
-          <div>{{ props.row.productsSum }} ₽</div>
+          <div>{{ order.productsSum }} ₽</div>
         </div>
         <div class="order__info-details__result-item">
           <div>Доставка</div>
-          <div v-if="props.row.deliveryCost">{{ props.row.deliveryCost }} ₽</div>
+          <div v-if="order.deliveryCost">{{ order.deliveryCost }} ₽</div>
           <div v-else>-</div>
         </div>
         <div class="order__info-details__result-item">
           <div>Итого к оплате</div>
           <div>{{
-              props.row.deliveryCost ? (props.row.productsSum + props.row.deliveryCost) : props.row.productsSum
+              order.deliveryCost ? (order.productsSum + order.deliveryCost) : order.productsSum
             }} ₽
           </div>
         </div>
@@ -82,9 +83,26 @@
 
 <script>
 export default {
-  name: "ExpandTable",
+  name: "order-info",
   props: {
-    props: {type: Object}
+    orderNumber: { type: Number }
+  },
+  data() {
+    return {
+      loading: true,
+      order: {}
+    }
+  },
+  mounted() {
+    this.getOrder()
+  },
+  methods: {
+    getOrder() {
+      this.loading = true
+      this.$orders.getOrder(this.orderNumber)
+          .then(order => this.order = order)
+          .finally(() => this.loading = false)
+    }
   }
 }
 </script>
