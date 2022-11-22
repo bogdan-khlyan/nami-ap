@@ -51,12 +51,15 @@ export default {
   &__main {
     display: flex;
     width: 100%;
+    max-width: 100%;
+    flex: 1;
   }
 
   &__sidebar {
     display: flex;
+    width: max-content;
+    max-width: 200px;
     //min-width: 84px;
-    //width: 84px;
   }
 
   &__content {

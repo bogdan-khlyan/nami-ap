@@ -1,6 +1,6 @@
 <template>
-<!--  <transition name="fade" mode="out-in">-->
-    <div class="base-sidebar" :class="{'open-menu': isOpenMenu}">
+  <div class="base-sidebar" :class="{'open-menu': isOpenMenu}">
+    <div class="base-sidebar__wrap">
       <div class="base-sidebar__logo">
         <logo-vertical-icon/>
       </div>
@@ -9,23 +9,25 @@
           <icon-arrow/>
         </button>
       </div>
-      <hr>
-      <div class="base-sidebar__menu">
-        <router-link
-            class="base-sidebar__menu--item"
-            :class="{extend: isOpenMenu}"
-            v-for="item of items" :key="item.to"
-            :to="item.to"
-        >
-          <el-tooltip v-if="!isOpenMenu" :content="item.title" placement="right" effect="customized">
-            <component :is="item.icon"/>
-          </el-tooltip>
-          <component v-else :is="item.icon"/>
-          <div :class="{'dnone': !isOpenMenu}">{{ item.title }}</div>
-        </router-link>
-      </div>
     </div>
-<!--  </transition>-->
+    <hr>
+    <div class="base-sidebar__menu">
+      <router-link
+          class="base-sidebar__menu--item"
+          :class="{extend: isOpenMenu}"
+          v-for="item of items" :key="item.to"
+          :to="item.to"
+      >
+        <el-tooltip v-if="!isOpenMenu" :content="item.title" placement="right" effect="customized">
+          <component :is="item.icon"/>
+        </el-tooltip>
+        <component v-else :is="item.icon"/>
+        <transition name="bounce" appear>
+          <div v-if="isOpenMenu">{{ item.title }}</div>
+        </transition>
+      </router-link>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -55,17 +57,42 @@ export default {
   data () {
     return {
       isOpenMenu: true,
-      items: links
+      items: links,
+      currentItem: 1
     }
   },
   methods: {
     openMenu() {
       this.isOpenMenu = !this.isOpenMenu
       localStorage.setItem('is-collapse-menu', this.isOpenMenu.toString())
-    }
+    },
   }
 }
 </script>
+<style lang="scss">
+.bounce-enter-active {
+  animation: bounce-in 0.6s;
+}
+
+.bounce-leave-active {
+  animation: 0s;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(0.15);
+  }
+  40% {
+    transform: scale(0.30);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .base-sidebar {
@@ -73,12 +100,72 @@ export default {
   min-height: 100vh;
   background-color: #11162B;
 
-  transition: width ease-out 0.2s;
-  max-width: 84px;
+  //transition: width ease-out 0.2s;
+  width: 84px;
+  min-width: 84px;
+  flex-direction: column;
+  display: flex;
+
+  --transition-time: 1200ms;
+  //backdrop-filter: blur(20px);
+
+  //width: 320px;
+  //height: 100%;
+  //position: fixed;
+  //top: 0;
+  //bottom: 0;
+  margin: 0;
+  //left: -116px;
+  transition: min-width 400ms cubic-bezier(0.8, 0, 0.33, 1);
+
+
+  //padding: 15px 20px;
+  //-webkit-transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
+  //-moz-transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
+  //transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
+  //background: #16a085;
+  //z-index: 2000;
 
   &.open-menu {
-    transition: width ease-out 0.2s;
-    max-width: 200px;
+    //--transition-time: 500ms;
+    //transition: width ease-out 0.2s;
+    width: auto;
+    min-width: 200px;
+    //left: 0;
+    //overflow-y: auto;
+    //transform: translateX(20%);
+    //transition: width .8s ease-out;
+    //transform: translateX(0%);
+
+    //position: relative;
+    //width: 200px;
+    //height: 100%;
+    /* display: flex; */
+    //align-items: center;
+    //background: rgba(0, 0, 0, 0.45);
+    //backdrop-filter: blur(20px);
+    //transform: translateX(0%);
+    //z-index: 4;
+
+    //& .base-sidebar__wrap {
+    //  display: flex;
+    //  padding: 16px;
+    //  justify-content: space-between;
+    //  align-items: center;
+    //
+    //  & .base-sidebar__btn-collapse {
+    //    margin: 0;
+    //  }
+    //}
+  }
+
+  &__wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
   }
 
   > hr {
@@ -97,9 +184,9 @@ export default {
   }
 
   &__btn-collapse {
-    margin: 0 auto 19px auto;
+    //margin: 0 auto 19px auto;
     width: max-content;
-    transition-duration: 0.3s;
+    transition: all 400ms cubic-bezier(0.8, 0, 0.33, 1);
 
     &.rotate180 {
       transform: rotate(180deg);
@@ -144,11 +231,16 @@ export default {
       }
 
       & svg {
+        outline: none;
         min-width: 28px;
         min-height: 28px;
       }
 
-      &:hover, &.router-link-active {
+      &:hover {
+        background-color: #143ca8;
+      }
+
+      &.router-link-active {
         background-color: #1857F3;
       }
 
@@ -157,13 +249,5 @@ export default {
       }
     }
   }
-  //:deep(.el-menu-item) {
-  //  .el-icon {
-  //    font-size: 20px;
-  //  }
-  //  > span {
-  //    font-size: 16px;
-  //  }
-  //}
 }
 </style>
