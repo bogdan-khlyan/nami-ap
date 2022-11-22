@@ -5,7 +5,7 @@
         <logo-vertical-icon/>
       </div>
 
-      <div class="base-sidebar__btn-collapse" @click="isCollapse=!isCollapse">
+      <div class="base-sidebar__btn-collapse" @click="onChangeCollapseMenu">
         <button>
           <icon-arrow/>
         </button>
@@ -15,6 +15,7 @@
     <hr>
 
     <el-menu
+        mode="vertical"
         default-active="2"
         class="el-menu-vertical-custom"
         :collapse="isCollapse"
@@ -54,18 +55,19 @@ export default {
     IconUser, IconDashboard, LogoVerticalIcon,
     IconSettings, IconOrders
   },
-  props: {
-    expand: { type: Boolean }
+  mounted() {
+    this.isCollapse = localStorage.getItem('is-collapse-menu') === 'true'
   },
-  data () {
+  data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
       items: links
     }
   },
   methods: {
-    changeExpand(value) {
-      this.$emit('update:expand', value)
+    onChangeCollapseMenu() {
+      this.isCollapse = !this.isCollapse
+      localStorage.setItem('is-collapse-menu', this.isCollapse.toString())
     }
   }
 }
