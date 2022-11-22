@@ -40,3 +40,50 @@
     }
   }
 }
+
+// el-menu
+.el-menu-vertical-custom {
+  background-color: #11162B;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 12px;
+  border-right: none;
+
+
+  & .el-icon {
+    min-width: 28px;
+    margin-right: 0;
+  }
+
+  & .el-menu-item {
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 9px;
+    transition-duration: 300ms;
+
+    &.is-active {
+      background: #1857F3;
+      color: white;
+    }
+
+    &:hover, &.router-link-active {
+      background-color: #1857F3;
+    }
+  }
+}
+
+.el-menu-vertical-custom.collapse {
+  & .el-menu-item {
+    & .el-menu-tooltip__trigger {
+      color: #11162B;
+    }
+  }
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
