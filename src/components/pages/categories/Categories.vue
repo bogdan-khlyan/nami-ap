@@ -93,7 +93,7 @@ export default {
       loading: null,
 
       isShowModal: false,
-      modeModal: 'create'
+      modeModal: 'create',
     }
   },
   created() {
@@ -168,6 +168,16 @@ export default {
 
   &__table {
     width: 100%;
+
+    &-wrap-column {
+      :deep(.el-switch) {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  :deep(.el-table__body), :deep(.el-table__header) {
+    width: 100% !important;
   }
 }
 </style>

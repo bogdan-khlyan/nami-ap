@@ -43,7 +43,7 @@ export default {
 <style lang="scss" scoped>
 .base-wrapper {
   display: flex;
-  flex-direction: row;
+  width: 100%;
 
   &__header {
     height: 56px;
@@ -51,8 +51,7 @@ export default {
 
   &__main {
     display: flex;
-    width: 100%;
-    max-width: 100%;
+    overflow: auto;
     flex: 1;
   }
 

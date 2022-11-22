@@ -22,10 +22,18 @@
           <component :is="item.icon"/>
         </el-tooltip>
         <component v-else :is="item.icon"/>
-        <transition name="bounce" appear>
+        <transition name="bounce" appear mode="out-in">
           <div v-if="isOpenMenu">{{ item.title }}</div>
         </transition>
       </router-link>
+    </div>
+    <div class="base-sidebar__sign-out">
+      <el-icon>
+        <SwitchButton/>
+      </el-icon>
+      <transition name="bounce" appear mode="out-in">
+        <div v-if="isOpenMenu">Выйти</div>
+      </transition>
     </div>
   </div>
 </template>
@@ -57,8 +65,7 @@ export default {
   data () {
     return {
       isOpenMenu: true,
-      items: links,
-      currentItem: 1
+      items: links
     }
   },
   methods: {
@@ -75,7 +82,7 @@ export default {
 }
 
 .bounce-leave-active {
-  animation: 0s;
+  animation: bounce-in 0.4s reverse;
 }
 
 @keyframes bounce-in {
@@ -100,63 +107,18 @@ export default {
   min-height: 100vh;
   background-color: #11162B;
 
-  //transition: width ease-out 0.2s;
   width: 84px;
   min-width: 84px;
   flex-direction: column;
   display: flex;
 
   --transition-time: 1200ms;
-  //backdrop-filter: blur(20px);
-
-  //width: 320px;
-  //height: 100%;
-  //position: fixed;
-  //top: 0;
-  //bottom: 0;
   margin: 0;
-  //left: -116px;
   transition: min-width 400ms cubic-bezier(0.8, 0, 0.33, 1);
 
-
-  //padding: 15px 20px;
-  //-webkit-transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
-  //-moz-transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
-  //transition: left 0.3s cubic-bezier(0.8, 0, 0.33, 1);
-  //background: #16a085;
-  //z-index: 2000;
-
   &.open-menu {
-    //--transition-time: 500ms;
-    //transition: width ease-out 0.2s;
     width: auto;
     min-width: 200px;
-    //left: 0;
-    //overflow-y: auto;
-    //transform: translateX(20%);
-    //transition: width .8s ease-out;
-    //transform: translateX(0%);
-
-    //position: relative;
-    //width: 200px;
-    //height: 100%;
-    /* display: flex; */
-    //align-items: center;
-    //background: rgba(0, 0, 0, 0.45);
-    //backdrop-filter: blur(20px);
-    //transform: translateX(0%);
-    //z-index: 4;
-
-    //& .base-sidebar__wrap {
-    //  display: flex;
-    //  padding: 16px;
-    //  justify-content: space-between;
-    //  align-items: center;
-    //
-    //  & .base-sidebar__btn-collapse {
-    //    margin: 0;
-    //  }
-    //}
   }
 
   &__wrap {
@@ -184,7 +146,6 @@ export default {
   }
 
   &__btn-collapse {
-    //margin: 0 auto 19px auto;
     width: max-content;
     transition: all 400ms cubic-bezier(0.8, 0, 0.33, 1);
 
@@ -205,6 +166,22 @@ export default {
     }
   }
 
+  &__sign-out {
+    justify-content: center;
+    cursor: pointer;
+    padding: 12px;
+    gap: 6px;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    color: white;
+    transition-duration: 300ms;
+
+    &:hover {
+      background-color: #143ca8;
+    }
+  }
+
   &__menu {
     display: flex;
     flex-direction: column;
@@ -213,18 +190,17 @@ export default {
 
     &--item {
       display: flex;
-      justify-content: center;
+      //justify-content: center;
       align-items: center;
       gap: 4px;
-      width: 60px;
-      //height: 52px;
+      max-width: 100%;
       background-color: transparent;
       border-radius: 10px;
       color: white;
       text-decoration: none;
       padding: 17px 21px;
 
-      transition-duration: 300ms;
+      //transition-duration: 300ms;
 
       &.extend {
         width: 100%;
