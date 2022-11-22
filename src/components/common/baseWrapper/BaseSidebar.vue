@@ -17,7 +17,10 @@
             v-for="item of items" :key="item.to"
             :to="item.to"
         >
-          <component :is="item.icon"/>
+          <el-tooltip v-if="!isOpenMenu" :content="item.title" placement="right" effect="customized">
+            <component :is="item.icon"/>
+          </el-tooltip>
+          <component v-else :is="item.icon"/>
           <div :class="{'dnone': !isOpenMenu}">{{ item.title }}</div>
         </router-link>
       </div>
