@@ -190,10 +190,11 @@ export default {
 
     &--item {
       display: flex;
-      //justify-content: center;
+      justify-content: center;
       align-items: center;
       gap: 4px;
-      max-width: 100%;
+      flex: 1;
+      //max-width: 100%;
       background-color: transparent;
       border-radius: 10px;
       color: white;
@@ -203,7 +204,8 @@ export default {
       //transition-duration: 300ms;
 
       &.extend {
-        width: 100%;
+        justify-content: flex-start;
+        //width: 100%;
       }
 
       & svg {
