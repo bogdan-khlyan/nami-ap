@@ -1,40 +1,28 @@
 <template>
-  <div class="base-sidebar">
-    <div class="base-sidebar__wrap" :class="{'row-content': !isCollapse}">
+<!--  <transition name="fade" mode="out-in">-->
+    <div class="base-sidebar" :class="{'open-menu': isOpenMenu}">
       <div class="base-sidebar__logo">
         <logo-vertical-icon/>
       </div>
-
-      <div class="base-sidebar__btn-collapse" @click="onChangeCollapseMenu">
+      <div class="base-sidebar__btn-collapse" :class="{rotate180: isOpenMenu}" @click="openMenu">
         <button>
           <icon-arrow/>
         </button>
       </div>
-    </div>
-
-    <hr>
-
-    <el-menu
-        mode="vertical"
-        default-active="2"
-        class="el-menu-vertical-custom"
-        :collapse="isCollapse"
-        :class="{collapse: isCollapse}"
-        :collapse-transition="false"
-    >
-      <el-menu-item
-          v-for="(item, key) of items"
-          @click="$router.push(item.to)"
-          :key="item.to"
-          :index="String(key)"
-      >
-        <el-icon :size="28" color="white">
+      <hr>
+      <div class="base-sidebar__menu">
+        <router-link
+            class="base-sidebar__menu--item"
+            :class="{extend: isOpenMenu}"
+            v-for="item of items" :key="item.to"
+            :to="item.to"
+        >
           <component :is="item.icon"/>
-        </el-icon>
-        <template #title>{{ item.title }}</template>
-      </el-menu-item>
-    </el-menu>
-  </div>
+          <div :class="{'dnone': !isOpenMenu}">{{ item.title }}</div>
+        </router-link>
+      </div>
+    </div>
+<!--  </transition>-->
 </template>
 
 <script>
@@ -55,41 +43,39 @@ export default {
     IconUser, IconDashboard, LogoVerticalIcon,
     IconSettings, IconOrders
   },
-  mounted() {
-    this.isCollapse = localStorage.getItem('is-collapse-menu') === 'true'
+  props: {
+    expand: { type: Boolean }
   },
-  data() {
+  mounted() {
+    this.isOpenMenu = localStorage.getItem('is-collapse-menu') === 'true'
+  },
+  data () {
     return {
-      isCollapse: false,
+      isOpenMenu: true,
       items: links
     }
   },
   methods: {
-    onChangeCollapseMenu() {
-      this.isCollapse = !this.isCollapse
-      localStorage.setItem('is-collapse-menu', this.isCollapse.toString())
+    openMenu() {
+      this.isOpenMenu = !this.isOpenMenu
+      localStorage.setItem('is-collapse-menu', this.isOpenMenu.toString())
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .base-sidebar {
-  z-index: 10;
+  z-index: 10001;
   min-height: 100vh;
   background-color: #11162B;
 
-  &__wrap.row-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-right: 19px;
+  transition: width ease-out 0.2s;
+  max-width: 84px;
 
-    & .base-sidebar__btn-collapse {
-      margin: 0;
-      transform: rotate(180deg);
-    }
+  &.open-menu {
+    transition: width ease-out 0.2s;
+    max-width: 200px;
   }
 
   > hr {
@@ -100,8 +86,7 @@ export default {
   }
 
   &__logo {
-    padding: 19px;
-
+    padding-bottom: 6px;
     :deep(svg) {
       display: block;
       margin: 8px auto;
@@ -109,9 +94,13 @@ export default {
   }
 
   &__btn-collapse {
-    transition: transform 0.3s;
     margin: 0 auto 19px auto;
     width: max-content;
+    transition-duration: 0.3s;
+
+    &.rotate180 {
+      transform: rotate(180deg);
+    }
 
     > button {
       display: flex;
@@ -125,5 +114,53 @@ export default {
       cursor: pointer;
     }
   }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    margin: 0 12px;
+    gap: 4px;
+
+    &--item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      width: 60px;
+      //height: 52px;
+      background-color: transparent;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      padding: 17px 21px;
+
+      transition-duration: 300ms;
+
+      &.extend {
+        width: 100%;
+      }
+
+      & svg {
+        min-width: 28px;
+        min-height: 28px;
+      }
+
+      &:hover, &.router-link-active {
+        background-color: #1857F3;
+      }
+
+      & .dnone {
+        display: none;
+      }
+    }
+  }
+  //:deep(.el-menu-item) {
+  //  .el-icon {
+  //    font-size: 20px;
+  //  }
+  //  > span {
+  //    font-size: 16px;
+  //  }
+  //}
 }
 </style>
