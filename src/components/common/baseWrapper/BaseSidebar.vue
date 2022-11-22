@@ -1,23 +1,38 @@
 <template>
   <div class="base-sidebar">
-    <div class="base-sidebar__logo">
-      <logo-vertical-icon/>
+    <div class="base-sidebar__wrap" :class="{'row-content': !isCollapse}">
+      <div class="base-sidebar__logo">
+        <logo-vertical-icon/>
+      </div>
+
+      <div class="base-sidebar__btn-collapse" @click="isCollapse=!isCollapse">
+        <button>
+          <icon-arrow/>
+        </button>
+      </div>
     </div>
-    <div class="base-sidebar__btn-collapse">
-      <button>
-        <icon-arrow/>
-      </button>
-    </div>
+
     <hr>
-    <div class="base-sidebar__menu">
-      <router-link
-          class="base-sidebar__menu--item"
-          v-for="item of items" :key="item.to"
-          :to="item.to"
+
+    <el-menu
+        default-active="2"
+        class="el-menu-vertical-custom"
+        :collapse="isCollapse"
+        :class="{collapse: isCollapse}"
+        :collapse-transition="false"
+    >
+      <el-menu-item
+          v-for="(item, key) of items"
+          @click="$router.push(item.to)"
+          :key="item.to"
+          :index="String(key)"
       >
-        <component :is="item.icon"/>
-      </router-link>
-    </div>
+        <el-icon :size="28" color="white">
+          <component :is="item.icon"/>
+        </el-icon>
+        <template #title>{{ item.title }}</template>
+      </el-menu-item>
+    </el-menu>
   </div>
 </template>
 
@@ -44,7 +59,7 @@ export default {
   },
   data () {
     return {
-      drawer: true,
+      isCollapse: true,
       items: links
     }
   },
@@ -56,13 +71,24 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .base-sidebar {
   z-index: 10;
-  position: fixed;
-  width: 84px;
   min-height: 100vh;
   background-color: #11162B;
+
+  &__wrap.row-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 19px;
+
+    & .base-sidebar__btn-collapse {
+      margin: 0;
+      transform: rotate(180deg);
+    }
+  }
 
   > hr {
     width: 36px;
@@ -72,7 +98,8 @@ export default {
   }
 
   &__logo {
-    padding-bottom: 6px;
+    padding: 19px;
+
     :deep(svg) {
       display: block;
       margin: 8px auto;
@@ -80,8 +107,10 @@ export default {
   }
 
   &__btn-collapse {
+    transition: transform 0.3s;
     margin: 0 auto 19px auto;
     width: max-content;
+
     > button {
       display: flex;
       justify-content: center;
@@ -91,35 +120,8 @@ export default {
       background: #FFFFFF;
       border: none;
       border-radius: 50%;
-
-      cursor: no-drop;
+      cursor: pointer;
     }
   }
-
-  &__menu {
-    &--item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 8px auto;
-      width: 60px;
-      height: 52px;
-      background-color: transparent;
-      border-radius: 10px;
-
-      transition-duration: 300ms;
-      &:hover, &.router-link-active {
-        background-color: #1857F3;
-      }
-    }
-  }
-  //:deep(.el-menu-item) {
-  //  .el-icon {
-  //    font-size: 20px;
-  //  }
-  //  > span {
-  //    font-size: 16px;
-  //  }
-  //}
 }
 </style>
