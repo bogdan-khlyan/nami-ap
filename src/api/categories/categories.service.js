@@ -38,5 +38,15 @@ export default () => ({
         const { category } = await http.patch(`/api/admin/product/category/${requestData._id}`, requestData)
         this.store.updateCategory(category)
         return category
+    },
+    async createCategory(category) {
+        const response = await http.post('/api/admin/product/category', category)
+        this.store.pushCategory(response?.category)
+        return response
+    },
+    async deleteCategory(category) {
+        const response = await http.delete(`/api/admin/product/category/${category._id}`)
+        this.store.deleteCategory(category)
+        return response
     }
 })

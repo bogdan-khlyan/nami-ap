@@ -35,6 +35,7 @@ export default {
           }
         })
     this.$icons.getIcons()
+    this.$config.getConfig()
   }
 }
 </script>
