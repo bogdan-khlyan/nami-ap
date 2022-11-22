@@ -1,7 +1,7 @@
 <template>
   <div class="base-wrapper">
     <div class="base-wrapper__sidebar">
-      <base-sidebar/>
+      <base-sidebar />
     </div>
     <div class="base-wrapper__main">
       <div class="base-wrapper__header">
@@ -10,7 +10,7 @@
       <div class="base-wrapper__content">
         <router-view v-slot="{ Component }">
           <transition name="el-fade-in-linear" mode="out-in">
-            <component :is="Component" />
+            <component :is="Component"/>
           </transition>
         </router-view>
       </div>
@@ -26,7 +26,7 @@ import iconsMixin from "@/api/icons/icons.mixin";
 export default {
   name: 'base-wrapper',
   mixins: [iconsMixin],
-  components: { BaseHeader, BaseSidebar },
+  components: {BaseHeader, BaseSidebar},
   created() {
     this.$categories.getCategories()
         .catch(error => {
@@ -35,13 +35,15 @@ export default {
           }
         })
     this.$icons.getIcons()
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .base-wrapper {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 
   &__header {
     height: 56px;
@@ -53,8 +55,11 @@ export default {
   }
 
   &__sidebar {
-    min-width: 84px;
-    width: 84px;
+    //position: fixed;
+    min-width: min-content;
+    max-width: 193px;
+    z-index: 10001;
+    //width: 100%;
     //@media screen and (max-width: 768px) {
     //
     //}
