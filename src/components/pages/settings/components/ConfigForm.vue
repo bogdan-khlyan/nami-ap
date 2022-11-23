@@ -58,8 +58,15 @@ export default {
       }
     }
   },
+  watch: {
+    config(newValue, oldValue) {
+      if (!oldValue) {
+        this.form = copyDeep(this.config)
+      }
+    }
+  },
   created() {
-    this.form = copyDeep(this.config)
+    if (this.config) this.form = copyDeep(this.config)
   },
   methods: {
     updateConfig() {
@@ -72,8 +79,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.config-form {
-
-}
-</style>
+<style lang="scss" scoped></style>
