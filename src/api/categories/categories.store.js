@@ -13,8 +13,7 @@ export default defineStore({
             this.categories.push(category)
         },
         deleteCategory(category) {
-            const index = this.categories.findIndex(item => item._id === category._id)
-            delete this.categories[index]
+            this.categories = this.categories.filter(item => item._id !== category._id)
         },
         updateCategory(category) {
             const index = this.categories.findIndex(item => item._id === category._id)
