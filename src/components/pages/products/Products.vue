@@ -26,86 +26,7 @@
       >Добавить продукт</el-button>
     </div>
     <div class="products__table">
-      <el-table
-          :data="productsFiltered"
-          style="width: 100%"
-      >
-        <el-table-column
-            property="title"
-            label="Наименование"
-            width="200px"
-        />
-        <el-table-column
-            class-name="products__table--description"
-            property="description"
-            label="Описание"
-            width="auto"
-        />
-        <el-table-column
-            property="title"
-            label="Варианты"
-            width="300px"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.type === 'VARIANT'">
-              {{ scope.row.variants.map(item => item.title).join('/') }}
-            </span>
-            <span v-else>Обычный</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="weight"
-            label="Вес"
-            width="120px"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.type === 'SINGLE'">
-              {{ scope.row.weight }}
-            </span>
-            <span v-else>
-              {{ scope.row.variants.map(item => item.weight).join('/') }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="cost"
-            label="Стоимость"
-            width="120px"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.type === 'SINGLE'">
-              {{ scope.row.cost }}
-            </span>
-            <span v-else>
-              {{ scope.row.variants.map(item => item.cost).join('/') }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="visible"
-            label="Статус"
-            width="120px"
-        >
-          <template #default="scope">
-            <el-switch
-                v-model="scope.row.visible"
-                inline-prompt
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                :loading="loading === scope.row._id"
-                @change="updateProductStatus(scope.row)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column width="80">
-          <template #default="scope">
-            <el-button
-                type="primary" icon="edit"
-                :loading="loading === scope.row._id"
-                @click="$router.push(`/products/${scope.row._id}`)"
-            />
-          </template>
-        </el-table-column>
-      </el-table>
+      <products-table :productsFiltered="productsFiltered"/>
     </div>
   </div>
 </template>
@@ -113,13 +34,14 @@
 <script>
 import productsMixin from "@/api/products/products.mixin";
 import categoriesMixin from "@/api/categories/categories.mixin";
+import ProductsTable from "@/components/pages/products/components/ProductsTable";
 
 export default {
   name: 'products',
+  components: {ProductsTable},
   mixins: [categoriesMixin, productsMixin],
   data() {
     return {
-      loading: null,
       filters: {
         title: null,
         category: null,
@@ -156,13 +78,6 @@ export default {
   },
   created() {
     this.$products.getProducts()
-  },
-  methods: {
-    updateProductStatus(product) {
-      this.loading = product._id
-      this.$products.updateProduct(product._id, product.type, { visible: product.visible })
-          .then(() => this.loading = null)
-    }
   }
 }
 </script>
