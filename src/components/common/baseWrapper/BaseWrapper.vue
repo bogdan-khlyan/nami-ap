@@ -1,7 +1,7 @@
 <template>
   <div class="base-wrapper">
-    <div class="base-wrapper__sidebar">
-      <base-sidebar/>
+    <div class="base-wrapper__sidebar" :style="{maxWidth : !this.isOpenSidebar ? '84px': '200px' }">
+      <base-sidebar @sidebarState="sidebarState"/>
     </div>
     <div class="base-wrapper__main">
       <div class="base-wrapper__header">
@@ -27,6 +27,11 @@ export default {
   name: 'base-wrapper',
   mixins: [iconsMixin],
   components: { BaseHeader, BaseSidebar },
+  data() {
+    return {
+      isOpenSidebar: false
+    }
+  },
   created() {
     this.$categories.getCategories()
         .catch(error => {
@@ -36,6 +41,12 @@ export default {
         })
     this.$icons.getIcons()
     this.$config.getConfig()
+  },
+  methods: {
+    sidebarState(event) {
+      console.log(event)
+      this.isOpenSidebar = event
+    }
   }
 }
 </script>
@@ -50,16 +61,18 @@ export default {
   }
 
   &__main {
+    margin-left: auto;
     display: flex;
     overflow: auto;
     flex: 1;
+    transition: all 350ms linear;
   }
 
   &__sidebar {
     display: flex;
-    width: max-content;
-    max-width: 200px;
-    //min-width: 84px;
+    width: 100%;
+    max-width: 84px;
+    transition: all 350ms linear;
   }
 
   &__content {

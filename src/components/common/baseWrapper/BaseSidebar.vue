@@ -1,5 +1,5 @@
 <template>
-  <div class="base-sidebar" :class="{'open-menu': isOpenMenu}">
+  <div class="base-sidebar max-width-init" :class="{'open-menu': isOpenMenu}" ref="sidebar">
     <div class="base-sidebar__wrap">
       <div class="base-sidebar__logo">
         <logo-vertical-icon/>
@@ -12,26 +12,28 @@
     </div>
     <hr>
     <div class="base-sidebar__menu">
-      <router-link
-          class="base-sidebar__menu--item"
-          :class="{extend: isOpenMenu}"
-          v-for="item of items" :key="item.to"
-          :to="item.to"
-      >
-        <el-tooltip v-if="!isOpenMenu" :content="item.title" placement="right" effect="customized">
-          <component :is="item.icon"/>
-        </el-tooltip>
-        <component v-else :is="item.icon"/>
-        <transition name="bounce" appear mode="out-in">
-          <div v-if="isOpenMenu">{{ item.title }}</div>
-        </transition>
-      </router-link>
+      <transition-group name="emerging-el" appear>
+        <router-link
+            class="base-sidebar__menu--item"
+            :class="{extend: isOpenMenu}"
+            v-for="item of items" :key="item.to"
+            :to="item.to"
+        >
+          <el-tooltip v-if="!isOpenMenu" :content="item.title" placement="right" effect="customized">
+            <component :is="item.icon"/>
+          </el-tooltip>
+          <component v-else :is="item.icon"/>
+          <transition name="bounce" appear mode="out-in">
+            <div v-if="isOpenMenu">{{ item.title }}</div>
+          </transition>
+        </router-link>
+      </transition-group>
     </div>
     <div class="base-sidebar__sign-out">
       <el-icon>
         <SwitchButton/>
       </el-icon>
-      <transition name="bounce" appear mode="out-in">
+      <transition name="bounce" appear>
         <div v-if="isOpenMenu">Выйти</div>
       </transition>
     </div>
@@ -61,6 +63,8 @@ export default {
   },
   mounted() {
     this.isOpenMenu = localStorage.getItem('is-collapse-menu') === 'true'
+    this.$emit('sidebarState', this.isOpenMenu)
+    this.$refs.sidebar.classList.remove('max-width-init');
   },
   data () {
     return {
@@ -72,53 +76,39 @@ export default {
     openMenu() {
       this.isOpenMenu = !this.isOpenMenu
       localStorage.setItem('is-collapse-menu', this.isOpenMenu.toString())
+      this.$emit('sidebarState', this.isOpenMenu)
     },
   }
 }
 </script>
-<style lang="scss">
-.bounce-enter-active {
-  animation: bounce-in 0.6s;
-}
-
-.bounce-leave-active {
-  animation: bounce-in 0.4s reverse;
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  20% {
-    transform: scale(0.15);
-  }
-  40% {
-    transform: scale(0.30);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .base-sidebar {
   z-index: 10001;
   min-height: 100vh;
+  position: fixed;
   background-color: #11162B;
 
   width: 84px;
-  min-width: 84px;
   flex-direction: column;
   display: flex;
 
   --transition-time: 1200ms;
   margin: 0;
-  transition: min-width 400ms cubic-bezier(0.8, 0, 0.33, 1);
+  transition: width 350ms linear;
+  //transition: min-width 400ms cubic-bezier(0.8, 0, 0.33, 1);
+
+  &.max-width-init {
+    max-width: 84px;
+    transition: none;
+  }
 
   &.open-menu {
-    width: auto;
-    min-width: 200px;
+    width: 200px;
+    max-width: 200px;
+
+    & .base-sidebar__sign-out svg {
+      position: absolute;
+    }
   }
 
   &__wrap {
@@ -226,6 +216,44 @@ export default {
         display: none;
       }
     }
+  }
+}
+
+.emerging-el-enter-active, .emerging-el-leave-active {
+  transition: all 650ms ease-in-out;
+}
+
+.emerging-el-enter-from, .emerging-el-leave-to {
+  opacity: 0;
+  transform: scale3d(0, 0, 0);
+}
+
+.emerging-el-enter-to, .emerging-el-leave-from {
+  opacity: 1;
+  transform: scale3d(1, 1, 1);
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.6s;
+}
+
+.bounce-leave-active {
+  position: absolute;
+  animation: bounce-in 0 reverse;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(0.15);
+  }
+  40% {
+    transform: scale(0.30);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
