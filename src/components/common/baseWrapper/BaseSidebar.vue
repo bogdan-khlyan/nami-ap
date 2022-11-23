@@ -57,6 +57,7 @@ export default {
   },
   mounted() {
     this.isCollapse = localStorage.getItem('is-collapse-menu') === 'true'
+    this.$emit('changeCollapse', this.isCollapse)
   },
   data() {
     return {
@@ -67,6 +68,7 @@ export default {
   methods: {
     onChangeCollapseMenu() {
       this.isCollapse = !this.isCollapse
+      this.$emit('changeCollapse', this.isCollapse)
       localStorage.setItem('is-collapse-menu', this.isCollapse.toString())
     }
   }

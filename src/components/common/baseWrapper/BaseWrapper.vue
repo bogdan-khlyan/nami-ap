@@ -1,7 +1,7 @@
 <template>
   <div class="base-wrapper">
-    <div class="base-wrapper__sidebar">
-      <base-sidebar />
+    <div class="base-wrapper__sidebar" :style="{width: isCollapse?'84px': '200px'}">
+      <base-sidebar @changeCollapse="changeCollapse"/>
     </div>
     <div class="base-wrapper__main">
       <div class="base-wrapper__header">
@@ -27,6 +27,11 @@ export default {
   name: 'base-wrapper',
   mixins: [iconsMixin],
   components: {BaseHeader, BaseSidebar},
+  data() {
+    return {
+      isCollapse: false
+    }
+  },
   created() {
     this.$categories.getCategories()
         .catch(error => {
@@ -36,6 +41,11 @@ export default {
         })
     this.$icons.getIcons()
   },
+  methods: {
+    changeCollapse(event) {
+      this.isCollapse = event
+    }
+  }
 }
 </script>
 
@@ -52,11 +62,13 @@ export default {
   &__main {
     display: flex;
     width: 100%;
+    overflow: auto;
   }
 
   &__sidebar {
     //position: fixed;
-    min-width: min-content;
+    transition: width 0.8s ease;
+    //min-width: min-content;
     max-width: 193px;
     z-index: 10001;
     //width: 100%;
