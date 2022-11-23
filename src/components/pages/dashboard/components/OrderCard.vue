@@ -42,9 +42,6 @@ export default {
   components: { ConditionDropDown, BaseUserAvatar },
   props: {
     order: { type: Object }
-  },
-  created() {
-    console.log(this.order)
   }
 }
 </script>

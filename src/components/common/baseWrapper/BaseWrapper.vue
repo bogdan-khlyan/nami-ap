@@ -44,7 +44,6 @@ export default {
   },
   methods: {
     sidebarState(event) {
-      console.log(event)
       this.isOpenSidebar = event
     }
   }
