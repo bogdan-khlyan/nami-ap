@@ -1,5 +1,5 @@
 <template>
-  <div class="base-sidebar max-width-init" :class="{'open-menu': isOpenMenu}" ref="sidebar">
+  <div class="base-sidebar" :class="{'open-menu': isOpenMenu, 'max-width-init': !isRemoveInitClass}">
     <div class="base-sidebar__wrap">
       <div class="base-sidebar__logo">
         <logo-vertical-icon/>
@@ -63,13 +63,14 @@ export default {
   },
   mounted() {
     this.isOpenMenu = localStorage.getItem('is-collapse-menu') === 'true'
+    this.isRemoveInitClass = true
     this.$emit('sidebarState', this.isOpenMenu)
-    this.$refs.sidebar.classList.remove('max-width-init');
   },
   data () {
     return {
       isOpenMenu: true,
-      items: links
+      items: links,
+      isRemoveInitClass: false
     }
   },
   methods: {
@@ -92,10 +93,8 @@ export default {
   flex-direction: column;
   display: flex;
 
-  --transition-time: 1200ms;
   margin: 0;
   transition: width 350ms linear;
-  //transition: min-width 400ms cubic-bezier(0.8, 0, 0.33, 1);
 
   &.max-width-init {
     max-width: 84px;
@@ -184,7 +183,6 @@ export default {
       align-items: center;
       gap: 4px;
       flex: 1;
-      //max-width: 100%;
       background-color: transparent;
       border-radius: 10px;
       color: white;
