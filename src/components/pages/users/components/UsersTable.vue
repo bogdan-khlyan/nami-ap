@@ -1,7 +1,9 @@
 <template>
   <table class="users__table">
     <tr class="users__table-heading">
-      <th></th>
+      <th>
+        <el-checkbox v-model="isSelectedAll" @change=" $emit('onChangeAll', $event)"></el-checkbox>
+      </th>
       <th></th>
       <th>Телефон</th>
       <th>Имя</th>
@@ -14,7 +16,7 @@
         class="users__table-content"
     >
       <td>
-        <el-checkbox></el-checkbox>
+        <el-checkbox v-model="item.isChecked" @change="onChangeCheckbox(item)"></el-checkbox>
       </td>
       <td class="users__table-wrap-avatar">
         <base-user-avatar :avatar="item.avatar"/>
@@ -42,7 +44,18 @@ import BaseUserAvatar from "@/components/common/BaseUserAvatar";
 export default {
   name: "UsersTable",
   components: {BaseUserAvatar},
-  props: { users: {type: Array, default: []}},
+  props: {users: {type: Array}},
+  data() {
+    return {
+      isSelectedAll: false,
+    }
+  },
+  methods: {
+    onChangeCheckbox(event) {
+      this.$emit('onChangeCheckbox', event)
+      this.isSelectedAll = this.users.filter((item) => item.isChecked).length === this.users.length;
+    }
+  }
 }
 </script>
 

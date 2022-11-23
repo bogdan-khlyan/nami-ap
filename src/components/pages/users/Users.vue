@@ -20,7 +20,7 @@
     </div>
 
     <div class="users__table">
-      <users-table :users="users"/>
+      <users-table :users="users" @onChangeCheckbox="onChangeUser" @onChangeAll="onChangeAll"/>
     </div>
 
     <div class="users__pagination">
@@ -61,6 +61,19 @@ export default {
     }
   },
   methods: {
+    onChangeAll(event) {
+      this.users = this.users.map((item) => {
+            return {...item, isChecked: event}
+          }
+      )
+    },
+    onChangeUser(event) {
+      this.users.forEach((item, index) => {
+        if (item._id === event._id) {
+          this.users[index].isChecked = event.isChecked
+        }
+      })
+    },
     onChangePagination(event) {
       this.pagination = event
       this.getUsers()
@@ -73,7 +86,11 @@ export default {
       } = await this.$users.getUsers(this.pagination.page, this.pagination.limit, this.filters.onlyRegistered ? 'CUSTOMER' : null)
 
       this.pagination.total = total
-      this.users = data
+      this.users = data.map(user => {
+        return {
+          ...user, isChecked: false
+        }
+      })
 
       this.loading = false
     }
