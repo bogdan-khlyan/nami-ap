@@ -9,7 +9,9 @@
       </el-button>
     </div>
 
-    <categories-table @openModal="openModal"/>
+    <div class="categories__table-wrap">
+      <categories-table @openModal="openModal"/>
+    </div>
 
     <modal-category @onCloseModal="isShowModal=false"
                     :show="isShowModal"

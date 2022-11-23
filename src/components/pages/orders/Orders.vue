@@ -50,7 +50,7 @@ import {conditionsArray} from "@/utils/conditions"
 export default {
   name: "orders",
   components: {OrdersTable, Pagination},
-  mounted() {
+  created() {
     this.getOrders()
   },
   data() {

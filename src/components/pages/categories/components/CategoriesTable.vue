@@ -1,58 +1,56 @@
 <template>
-  <div class="categories__table-wrap">
-    <table class="categories__table">
-      <tr class="categories__table-heading">
-        <th>Наименование</th>
-        <th></th>
-      </tr>
-      <tr v-for="item in categories"
-          :key="item._id"
-          class="categories__table-content"
-      >
-        <td :style="{color: !item.visible? '#A5A5A5':''}">{{ item.title }}</td>
-        <td class="categories__table-column--last">
-          <el-switch
-              :model-value="item.visible"
-              inline-prompt
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              :loading="loading === item._id"
-              @change="updateCategoryVisible(item)"
-          />
-          <div class="categories__table-wrap-edit-and-delete">
-            <el-tooltip
-                class="box-item"
-                effect="dark"
-                content="Редактировать"
-                placement="left-start"
+  <table class="categories__table">
+    <tr class="categories__table-heading">
+      <th>Наименование</th>
+      <th></th>
+    </tr>
+    <tr v-for="item in categories"
+        :key="item._id"
+        class="categories__table-content"
+    >
+      <td :style="{color: !item.visible? '#A5A5A5':''}">{{ item.title }}</td>
+      <td class="categories__table-column--last">
+        <el-switch
+            :model-value="item.visible"
+            inline-prompt
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            :loading="loading === item._id"
+            @change="updateCategoryVisible(item)"
+        />
+        <div class="categories__table-wrap-edit-and-delete">
+          <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="Редактировать"
+              placement="left-start"
+          >
+            <div @click="$emit('openModal', item)"
+                 class="categories__table-edit-icon"
             >
-              <div @click="$emit('openModal', item)"
-                   class="categories__table-edit-icon"
-              >
+              <el-icon color="white">
+                <Edit/>
+              </el-icon>
+            </div>
+          </el-tooltip>
+
+          <el-popconfirm
+              title="Хотите удалить категорию?"
+              confirm-button-text="Да"
+              cancel-button-text="Нет"
+              @confirm="onDeleteCategory(item)"
+          >
+            <template #reference>
+              <div class="categories__table-delete-icon">
                 <el-icon color="white">
-                  <Edit/>
+                  <delete/>
                 </el-icon>
               </div>
-            </el-tooltip>
-
-            <el-popconfirm
-                title="Хотите удалить категорию?"
-                confirm-button-text="Да"
-                cancel-button-text="Нет"
-                @confirm="onDeleteCategory(item)"
-            >
-              <template #reference>
-                <div class="categories__table-delete-icon">
-                  <el-icon color="white">
-                    <delete/>
-                  </el-icon>
-                </div>
-              </template>
-            </el-popconfirm>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </div>
+            </template>
+          </el-popconfirm>
+        </div>
+      </td>
+    </tr>
+  </table>
 </template>
 
 <script>
