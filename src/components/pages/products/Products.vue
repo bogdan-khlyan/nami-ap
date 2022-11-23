@@ -156,7 +156,6 @@ export default {
   },
   created() {
     this.$products.getProducts()
-    this.$categories.getCategories()
   },
   methods: {
     updateProductStatus(product) {

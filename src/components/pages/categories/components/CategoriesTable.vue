@@ -66,9 +66,6 @@ export default {
       loading: null,
     }
   },
-  async created() {
-    await this.$categories.getCategories()
-  },
   methods: {
     onDeleteCategory(category) {
       this.loading = category._id
