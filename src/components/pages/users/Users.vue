@@ -9,110 +9,72 @@
       />
       <el-checkbox
           v-model="filters.onlyRegistered"
-          @change="changeOnlyRegistered"
+          @change="getUsers"
       >Только зарегистрированные</el-checkbox>
       <el-button
           class="users__header--btn"
           type="primary" icon="promotion"
           disabled
-      >Отправить сообщение</el-button>
+      >Отправить сообщение
+      </el-button>
     </div>
+
     <div class="users__table">
-      <el-table
-          :data="users"
-          style="width: 100%"
-      >
-        <el-table-column type="selection" width="55" />
-        <el-table-column width="60">
-          <template #default="scope">
-            <base-user-avatar :avatar="scope.row.avatar"/>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="role"
-            width="40"
-        >
-          <template #default="scope">
-            <el-icon v-if="scope.row.role === 'USER'" color="green"><success-filled /></el-icon>
-            <el-icon v-else><circle-close-filled /></el-icon>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="phone"
-            label="Телефон"
-            width="200"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.phone">{{ scope.row.phone }}</span>
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="email"
-            label="Email"
-            width="300"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.email">{{ scope.row.email }}</span>
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            property="username"
-            label="Имя"
-            width="auto"
-        >
-          <template #default="scope">
-            <span v-if="scope.row.username || scope.row.name">{{ scope.row.username || scope.row.name }}</span>
-            <span v-else>-</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="base-pagination">
-        <el-pagination
-            layout="prev, pager, next"
-            background
-            :total="total"
-            :page-size="20"
-            @current-change="changePage"
-        />
-      </div>
+      <users-table :users="users"/>
+    </div>
+
+    <div class="users__pagination">
+      <base-pagination
+          class="orders__pagination"
+          :pagination="pagination"
+          @changePagination="onChangePagination"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import BaseUserAvatar from "@/components/common/BaseUserAvatar";
+import UsersTable from "@/components/pages/users/components/UsersTable"
+import BasePagination from "@/components/common/BasePagination";
 
 export default {
   name: 'products',
-  components: { BaseUserAvatar },
+  components: {BasePagination, UsersTable},
+  created() {
+    this.getUsers()
+  },
   data() {
     return {
-      loading: true,
+      loading: false,
       filters: {
         phone: null,
         onlyRegistered: false
       },
+
       users: [],
-      total: 0
+
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: 0
+      }
     }
   },
-  created() {
-    this.getUsersPage(1)
-  },
   methods: {
-    changePage(page) {
-      this.getUsersPage(page)
+    onChangePagination(event) {
+      this.pagination = event
+      this.getUsers()
     },
-    changeOnlyRegistered() {
-      this.getUsersPage(1)
-    },
-    async getUsersPage(page) {
+    async getUsers() {
       this.loading = true
-      const { total, data } = await this.$users.getUsers(page, 20, this.filters.onlyRegistered ? 'CUSTOMER' : null)
+      const {
+        data,
+        total
+      } = await this.$users.getUsers(this.pagination.page, this.pagination.limit, this.filters.onlyRegistered ? 'CUSTOMER' : null)
+
+      this.pagination.total = total
       this.users = data
-      this.total = total
+
       this.loading = false
     }
   }
