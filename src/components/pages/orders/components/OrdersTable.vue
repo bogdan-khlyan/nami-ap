@@ -25,7 +25,7 @@
           </a>
         </td>
         <td>{{ item.username }}</td>
-        <td>{{ item.address }}</td>
+        <td style="max-width: 400px;">{{ item.address }}</td>
         <td>
           <el-select v-model="item.condition"
                      :class="item.condition"
@@ -104,6 +104,13 @@ export default {
   width: 100%;
   padding: 14px 0;
   border-spacing: 0;
+
+  & th, td {
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
 
   &-wrap {
     background: #ffffff;

@@ -98,6 +98,13 @@ export default {
   padding: 14px 0;
   border-spacing: 0;
 
+  & th, td {
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
   &-wrap {
     background: #ffffff;
     border-radius: 8px;
