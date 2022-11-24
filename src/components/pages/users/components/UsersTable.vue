@@ -27,7 +27,12 @@
           <circle-close-filled/>
         </el-icon>
       </td>
-      <td>{{ item.phone }}</td>
+      <td>
+        <a :href="preparePhone(item.phone)"
+           class="users__table-phone">
+          {{ item.phone }}
+        </a>
+      </td>
       <td>{{ item.name }}</td>
       <td>-</td>
       <td>-</td>
@@ -40,9 +45,11 @@
 
 <script>
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
+import phonePrepareHrefMixin from "@/mixins/phone-prepare-href.mixin";
 
 export default {
   name: "UsersTable",
+  mixins: [phonePrepareHrefMixin],
   components: {BaseUserAvatar},
   props: {users: {type: Array}},
   data() {
@@ -70,6 +77,15 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
+  }
+
+  &-phone {
+    color: #212121;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &-wrap {
