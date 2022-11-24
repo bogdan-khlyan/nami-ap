@@ -32,6 +32,7 @@
     <orders-table
         :orders="orders"
         :loading="loading"
+        @extendTableRow="onExtendTableRow"
     />
 
     <pagination
@@ -75,6 +76,14 @@ export default {
     }
   },
   methods: {
+    onExtendTableRow(event) {
+      const index = this.orders.indexOf(event)
+      if (this.orders[index + 1] && Object.keys(this.orders[index + 1]).length > 1) {
+        this.orders.splice(index + 1, 0, {_id: event.number})
+      } else {
+        this.orders.splice(index + 1, 1)
+      }
+    },
     onChangePagination(event) {
       this.pagination = event
       this.getOrders()
@@ -82,7 +91,7 @@ export default {
     async getOrders() {
       this.loading = true
 
-      const { data, total } = await this.$orders
+      const {data, total} = await this.$orders
           .getOrders(this.pagination.limit, this.pagination.page, this.filters.condition)
 
       this.pagination.total = total
