@@ -9,6 +9,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import ru from 'element-plus/es/locale/lang/ru'
 
 import {createPinia} from 'pinia'
+import {useApi} from "@/api";
 const pinia = createPinia()
 
 const app = createApp(App)
@@ -21,3 +22,6 @@ app.use(router)
    .use(pinia)
    .use(ElementPlus, { locale: ru })
    .mount('#app')
+
+useApi(app)
+

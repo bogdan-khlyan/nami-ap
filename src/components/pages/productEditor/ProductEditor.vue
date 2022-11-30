@@ -96,12 +96,12 @@
 
 <script>
 import BaseLabel from "@/components/common/BaseLabel";
-import categoriesMixin from "@/store/categories/categories.mixin";
 import BaseCard from "@/components/common/BaseCard";
 import Ingredients from "@/components/pages/productEditor/components/Ingredients";
 import Variants from "@/components/pages/productEditor/components/Variants";
-import productsMixin from "@/store/products/products.mixin";
 import BaseUploadImages from "@/components/common/BaseUploadImages";
+import categoriesMixin from "@/api/categories/categories.mixin";
+import productsMixin from "@/api/products/products.mixin";
 import {useVuelidate} from "@vuelidate/core/dist/index.esm";
 import {maxLength, minLength, required} from "@vuelidate/validators";
 
@@ -127,7 +127,7 @@ export default {
     }
   },
   created() {
-    this.getProducts()
+    this.$products.getProducts()
         .then(() => this.getProduct())
   },
   methods: {
@@ -182,31 +182,31 @@ export default {
     },
     async saveVariant() {
       if (this.isCreate) {
-        const created = await this.createProduct('VARIANT', {
+        const created = await this.$products.createProduct('VARIANT', {
           title: this.product.title,
           description: this.product.description,
           ingredients: this.product.ingredients,
           visible: false,
         })
-        await this.updateCategoriesProduct(created._id, this.product.categories)
+        await this.$categories.updateCategoriesProduct(created._id, this.product.categories)
         await this.$refs.variants.createVariants(created._id)
-        this.$router.push('/products')
+        // this.$router.push(`/products/${created._id}`)
+        window.location.href = `/products/${created._id}` // TODO ...
       } else {
-        const updated = await this.updateProduct(this.product._id, 'VARIANT', {
+        const updated = await this.$products.updateProduct(this.product._id, 'VARIANT', {
           title: this.product.title,
           description: this.product.description,
           ingredients: this.product.ingredients,
           visible: this.product.visible
         })
-        await this.updateCategoriesProduct(updated._id, this.product.categories)
+        await this.$categories.updateCategoriesProduct(updated._id, this.product.categories)
         await this.$refs.variants.updateVariants(updated._id)
-        this.$router.push('/products')
       }
     },
     async saveSingle() {
       if (this.isCreate) {
         try {
-          const created = await this.createProduct('SINGLE', {
+          const created = await this.$products.createProduct('SINGLE', {
             title: this.product.title,
             description: this.product.description,
             cost: this.product.cost,
@@ -216,11 +216,12 @@ export default {
           })
           const promises = []
           promises.push(
-              this.updateCategoriesProduct(created._id, this.product.categories),
-              this.putImagesForSingleProduct(created._id, this.product.images.map(image => image.file))
+              this.$categories.updateCategoriesProduct(created._id, this.product.categories),
+              this.$products.putImagesForSingleProduct(created._id, this.product.images.map(image => image.file))
           )
           this.$notify.success({ title: 'Продукт успешно создан!' })
-          this.$router.push('/products')
+          // this.$router.push(`/products/${created._id}`)
+          window.location.href = `/products/${created._id}` // TODO ...
         } catch (error) {
           this.$notify.error({ title: 'Продукт не был создан!' })
         }
@@ -228,7 +229,7 @@ export default {
         try {
           const promises = []
           promises.push(
-              this.updateProduct(this.product._id, 'SINGLE', {
+              this.$products.updateProduct(this.product._id, 'SINGLE', {
                 title: this.product.title,
                 description: this.product.description,
                 cost: this.product.cost,
@@ -236,23 +237,22 @@ export default {
                 ingredients: this.product.ingredients,
                 visible: this.product.visible
               }),
-              this.updateCategoriesProduct(this.product._id, this.product.categories),
+              this.$categories.updateCategoriesProduct(this.product._id, this.product.categories),
           )
           const uploadImages = this.product.images
               .filter(image => !!image.file)
           if (uploadImages.length > 0) {
             promises.push(
-                this.putImagesForSingleProduct(
+                this.$products.putImagesForSingleProduct(
                     this.product._id,
                     uploadImages.map(image => image.file)
                 )
             )
           }
           this.deleteImages.forEach(image => {
-            promises.push(this.deleteImageFromProduct(this.product._id, image.filename))
+            promises.push(this.$products.deleteImageFromProduct(this.product._id, image.filename))
           })
           await Promise.all(promises)
-          this.$router.push('/products')
           this.$notify.success({ title: 'Продукт успешно обновлен!' })
         } catch (error) {
           this.$notify.error({ title: 'Продукт не был обновлен!' })

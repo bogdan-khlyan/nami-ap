@@ -21,21 +21,21 @@
 <script>
 import BaseHeader from "@/components/common/baseWrapper/BaseHeader";
 import BaseSidebar from "@/components/common/baseWrapper/BaseSidebar";
-import categoriesMixin from "@/store/categories/categories.mixin";
-import iconsMixin from "@/store/icons/icons.mixin";
+import iconsMixin from "@/api/icons/icons.mixin";
 
 export default {
   name: 'base-wrapper',
-  mixins: [categoriesMixin, iconsMixin],
+  mixins: [iconsMixin],
   components: { BaseHeader, BaseSidebar },
   created() {
-    this.getCategories()
+    this.$categories.getCategories()
         .catch(error => {
-          if (error.response.status === 401) {
+          if (error.response.status === 401) { // TODO move to interceptors
             this.$router.push('/login')
           }
         })
-    this.getIcons()
+    this.$icons.getIcons()
+    this.$config.getConfig()
   }
 }
 </script>

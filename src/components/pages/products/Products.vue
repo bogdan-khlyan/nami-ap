@@ -18,6 +18,7 @@
             :value="item._id"
         />
       </el-select>
+      <el-checkbox v-model="filters.onlyActive">Только активные</el-checkbox>
       <el-button
           class="products__header--btn"
           type="primary" icon="plus"
@@ -32,12 +33,58 @@
         <el-table-column
             property="title"
             label="Наименование"
+            width="200px"
+        />
+        <el-table-column
+            class-name="products__table--description"
+            property="description"
+            label="Описание"
             width="auto"
         />
         <el-table-column
+            property="title"
+            label="Варианты"
+            width="300px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'VARIANT'">
+              {{ scope.row.variants.map(item => item.title).join('/') }}
+            </span>
+            <span v-else>Обычный</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            property="weight"
+            label="Вес"
+            width="120px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'SINGLE'">
+              {{ scope.row.weight }}
+            </span>
+            <span v-else>
+              {{ scope.row.variants.map(item => item.weight).join('/') }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+            property="cost"
+            label="Стоимость"
+            width="120px"
+        >
+          <template #default="scope">
+            <span v-if="scope.row.type === 'SINGLE'">
+              {{ scope.row.cost }}
+            </span>
+            <span v-else>
+              {{ scope.row.variants.map(item => item.cost).join('/') }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
             property="visible"
             label="Статус"
-            width="auto"
+            width="120px"
         >
           <template #default="scope">
             <el-switch
@@ -64,8 +111,8 @@
 </template>
 
 <script>
-import categoriesMixin from "@/store/categories/categories.mixin";
-import productsMixin from "@/store/products/products.mixin";
+import productsMixin from "@/api/products/products.mixin";
+import categoriesMixin from "@/api/categories/categories.mixin";
 
 export default {
   name: 'products',
@@ -75,7 +122,8 @@ export default {
       loading: null,
       filters: {
         title: null,
-        category: null
+        category: null,
+        onlyActive: true
       }
     }
   },
@@ -88,6 +136,10 @@ export default {
     },
     productsFiltered() {
       let filtered = this.products
+      if (this.filters.onlyActive) {
+        filtered = filtered
+            .filter(product => product.visible)
+      }
       if (this.filters.category) {
         filtered = filtered
             .filter(product => !!this.selectedCategory.productIds.find(productId => productId === product._id))
@@ -103,13 +155,13 @@ export default {
     }
   },
   created() {
-    this.getProducts()
-    this.getCategories()
+    this.$products.getProducts()
+    this.$categories.getCategories()
   },
   methods: {
     updateProductStatus(product) {
       this.loading = product._id
-      this.updateProduct(product._id, product.type, { visible: product.visible })
+      this.$products.updateProduct(product._id, product.type, { visible: product.visible })
           .then(() => this.loading = null)
     }
   }
@@ -122,6 +174,7 @@ export default {
   &__header {
     margin-bottom: 10px;
     display: flex;
+    align-items: center;
     width: 100%;
     :deep(.el-input) {
       width: 300px;
@@ -129,6 +182,16 @@ export default {
     }
     &--btn {
       margin-left: auto;
+    }
+  }
+  &__table {
+    :deep(.products__table--description) {
+      .cell {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
     }
   }
 }

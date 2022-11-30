@@ -7,11 +7,11 @@ const routes = [{
 }, {
   path: '/',
   component: () => import('@/components/common/baseWrapper/BaseWrapper'),
-  children: [{
+  children: [/*{
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/components/pages/dashboard/Dashboard')
-  }, {
+  },*/ {
     path: '/users',
     name: 'users',
     component: () => import('@/components/pages/users/Users')
@@ -20,13 +20,25 @@ const routes = [{
     name: 'products',
     component: () => import('@/components/pages/products/Products')
   }, {
+    path: '/orders',
+    name: 'orders',
+    component: () => import('@/components/pages/orders/Orders')
+  }, {
     path: '/products/:productId',
     name: 'product',
     component: () => import('@/components/pages/productEditor/ProductEditor')
   }, {
-    path: '/icons',
-    name: 'icons',
-    component: () => import('@/components/pages/icons/Icons')
+    path: '/categories',
+    name: 'categories',
+    component: () => import('@/components/pages/categories/Categories')
+  }, {
+    path: '/news/:newId',
+    name: 'new-editor',
+    component: () => import('@/components/pages/news/components/NewEditor')
+  }, {
+    path: 'settings',
+    name: 'settings',
+    component: () => import('@/components/pages/settings/Settings')
   }]
 }]
 
