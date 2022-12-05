@@ -24,6 +24,10 @@
           type="primary" icon="plus"
           @click="$router.push('/products/create')"
       >Добавить продукт</el-button>
+      <el-button
+          type="warning" icon="document"
+          @click="exportProducts"
+      >Экспорт</el-button>
     </div>
     <div class="products__table">
       <el-table
@@ -113,6 +117,7 @@
 <script>
 import productsMixin from "@/api/products/products.mixin";
 import categoriesMixin from "@/api/categories/categories.mixin";
+import {exportProducts} from "@/utils/export-products";
 
 export default {
   name: 'products',
@@ -159,6 +164,12 @@ export default {
     this.$categories.getCategories()
   },
   methods: {
+    exportProducts() {
+      exportProducts(
+          this.products.filter(item => item.visible),
+          this.categories
+      )
+    },
     updateProductStatus(product) {
       this.loading = product._id
       this.$products.updateProduct(product._id, product.type, { visible: product.visible })
