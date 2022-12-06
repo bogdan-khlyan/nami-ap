@@ -24,7 +24,7 @@ export function exportProducts(products, categories) {
             result[4] = item.description
             if (item.type === 'SINGLE') {
                 result[2] = item.title
-                result[5] = item.cost
+                // result[5] = item.cost
                 result[6] = process.env.VUE_APP_BACKEND_HOST + '/api/product/image/' + item.images[0].filename
                 result[9] = item.weight
             } else {
@@ -32,14 +32,17 @@ export function exportProducts(products, categories) {
                         .map(variant => variant.title)
                         .join('/')
                     + ')'
-                result[5] = item.variants
-                    .map(variant => variant.cost)
-                    .join('/')
+                // result[5] = item.variants
+                //     .map(variant => variant.cost)
+                //     .join('/')
                 result[6] = process.env.VUE_APP_BACKEND_HOST + '/api/product/variant/image/' + item.variants[0].image
-                result[9] = item.variants
-                    .map(variant => variant.weight)
-                    .join('/')
+                result[9] = Math.max(
+                    ...item.variants
+                        .map(variant => variant.weight)
+                )
+                    // .join('/')
             }
+            result[5] = '-'
             result[7] = 'Нет'
             result[8] = 'Да'
             result[10] = 'грамм'
