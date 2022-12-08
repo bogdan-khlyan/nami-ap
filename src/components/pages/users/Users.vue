@@ -122,7 +122,7 @@ export default {
     },
     async getUsersPage() {
       this.loading = true
-      const { total, data } = await this.$users.getUsers(this.pagination.page, this.pagination.limit, this.filters.onlyRegistered ? 'CUSTOMER' : null)
+      const { total, data } = await this.$users.getUsers(this.pagination.page, this.pagination.limit, this.filters.onlyRegistered ? 'USER' : null)
       this.users = data
       this.total = total
       this.loading = false
