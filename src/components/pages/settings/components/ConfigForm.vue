@@ -59,7 +59,8 @@ export default {
     }
   },
   created() {
-    this.form = copyDeep(this.config)
+    this.$config.getConfig()
+        .then(config => this.form = copyDeep(config))
   },
   methods: {
     updateConfig() {
