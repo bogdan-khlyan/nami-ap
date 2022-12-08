@@ -30,9 +30,11 @@
       >Экспорт</el-button>
     </div>
     <div class="products__table">
-      <el-table
+      <el-table-draggable
           :data="productsFiltered"
-          style="width: 100%"
+          :disabled="disabledDraggable"
+          :key="disabledDraggable"
+          @drop="drop"
       >
         <el-table-column
             property="title"
@@ -109,12 +111,13 @@
             />
           </template>
         </el-table-column>
-      </el-table>
+      </el-table-draggable>
     </div>
   </div>
 </template>
 
 <script>
+import ElTableDraggable from "@/components/common/ElTableDraggable";
 import productsMixin from "@/api/products/products.mixin";
 import categoriesMixin from "@/api/categories/categories.mixin";
 import {exportProducts} from "@/utils/export-products";
@@ -122,6 +125,7 @@ import {exportProducts} from "@/utils/export-products";
 export default {
   name: 'products',
   mixins: [categoriesMixin, productsMixin],
+  components: { ElTableDraggable },
   data() {
     return {
       loading: null,
@@ -133,6 +137,15 @@ export default {
     }
   },
   computed: {
+    disabledDraggable() {
+      return !this.filters.onlyActive || !this.selectedCategory || !!this.filters.title
+    },
+    disabledProductIds() {
+      if (this.selectedCategory) {
+        return this.selectedCategory.productIds
+            .filter(productId => this.products.find(item => item._id === productId)?.visible)
+      }
+    },
     selectedCategory() {
       if (this.filters.category) {
         return this.categories
@@ -146,8 +159,15 @@ export default {
             .filter(product => product.visible)
       }
       if (this.filters.category) {
-        filtered = filtered
-            .filter(product => !!this.selectedCategory.productIds.find(productId => productId === product._id))
+        const temp = []
+        this.selectedCategory.productIds
+            .forEach(productId => {
+              const product = filtered.find(item => item._id === productId)
+              if (product) {
+                temp.push(product)
+              }
+            })
+        filtered = temp
       }
       if (this.filters.title) {
         filtered = filtered.filter(product =>
@@ -164,6 +184,12 @@ export default {
     this.$categories.getCategories()
   },
   methods: {
+    drop({ newIndex, oldIndex }) {
+      const ids = this.productsFiltered.map(item => item._id)
+      const current = ids.splice(oldIndex, 1)[0]
+      ids.splice(newIndex, 0, current)
+      console.log(ids)
+    },
     exportProducts() {
       exportProducts(
           this.products.filter(item => item.visible),
