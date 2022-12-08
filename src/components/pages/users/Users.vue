@@ -14,7 +14,7 @@
       <el-button
           class="users__header--btn"
           type="primary" icon="promotion"
-          disabled
+          @click="openMailingPopup"
       >Отправить сообщение</el-button>
     </div>
     <div class="users__table">
@@ -80,16 +80,17 @@
         />
       </div>
     </div>
+    <mailing-popup ref="mailingPopup"/>
   </div>
 </template>
 
 <script>
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
-import BasePagination from "@/components/common/BasePagination";
+import MailingPopup from "@/components/pages/users/components/MailingPopup";
 
 export default {
   name: 'products',
-  components: { BaseUserAvatar, BasePagination },
+  components: { BaseUserAvatar, MailingPopup },
   data() {
     return {
       loading: true,
@@ -109,6 +110,9 @@ export default {
     this.getUsersPage(1)
   },
   methods: {
+    openMailingPopup() {
+      this.$refs.mailingPopup.open()
+    },
     changePage(page) {
       this.pagination.page = page
       this.getUsersPage()
