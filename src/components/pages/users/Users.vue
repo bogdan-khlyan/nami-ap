@@ -70,11 +70,13 @@
       </el-table>
       <div class="base-pagination">
         <el-pagination
-            layout="prev, pager, next"
+            layout="prev, pager, next, sizes, total"
             background
             :total="total"
-            :page-size="20"
+            :page-sizes="[20, 50, 100, 200, 500, 1000]"
+            :page-size="pagination.limit"
             @current-change="changePage"
+            @size-change="changeSize"
         />
       </div>
     </div>
@@ -83,10 +85,11 @@
 
 <script>
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
+import BasePagination from "@/components/common/BasePagination";
 
 export default {
   name: 'products',
-  components: { BaseUserAvatar },
+  components: { BaseUserAvatar, BasePagination },
   data() {
     return {
       loading: true,
@@ -95,7 +98,11 @@ export default {
         onlyRegistered: false
       },
       users: [],
-      total: 0
+      total: 0,
+      pagination: {
+        page: 1,
+        limit: 20
+      }
     }
   },
   created() {
@@ -103,14 +110,19 @@ export default {
   },
   methods: {
     changePage(page) {
-      this.getUsersPage(page)
+      this.pagination.page = page
+      this.getUsersPage()
+    },
+    changeSize(size) {
+      this.pagination.limit = size
+      this.getUsersPage()
     },
     changeOnlyRegistered() {
       this.getUsersPage(1)
     },
-    async getUsersPage(page) {
+    async getUsersPage() {
       this.loading = true
-      const { total, data } = await this.$users.getUsers(page, 20, this.filters.onlyRegistered ? 'CUSTOMER' : null)
+      const { total, data } = await this.$users.getUsers(this.pagination.page, this.pagination.limit, this.filters.onlyRegistered ? 'CUSTOMER' : null)
       this.users = data
       this.total = total
       this.loading = false

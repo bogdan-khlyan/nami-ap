@@ -8,7 +8,15 @@
 }
 
 .base-pagination {
+  padding-top: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
+  .el-pagination__sizes {
+    margin-left: 10px;
+    margin-right: 10px;
+    .el-select, .el-input {
+      height: 32px;
+    }
+  }
 }
