@@ -199,7 +199,10 @@ export default {
     updateProductStatus(product) {
       this.loading = product._id
       this.$products.updateProduct(product._id, product.type, { visible: product.visible })
-          .then(() => this.loading = null)
+          .then(() => {
+            this.loading = null
+            this.$message.success({ message: 'Статус успешно изменен' })
+          })
     }
   }
 }
