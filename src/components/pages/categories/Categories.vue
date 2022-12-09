@@ -8,7 +8,7 @@
       >Создать категорию</el-button>
     </div>
     <div class="categories__table">
-      <el-table
+      <base-table
           :data="categories"
           style="width: 100%"
       >
@@ -70,7 +70,7 @@
 
           </template>
         </el-table-column>
-      </el-table>
+      </base-table>
     </div>
 
     <modal-category @onCloseModal="isShowModal=false"
@@ -81,12 +81,13 @@
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import categoriesMixin from "@/api/categories/categories.mixin";
 import ModalCategory from "@/components/pages/categories/components/ModalCategory";
 
 export default {
   name: 'categories',
-  components: {ModalCategory},
+  components: { ModalCategory, BaseTable },
   mixins: [categoriesMixin],
   data() {
     return {

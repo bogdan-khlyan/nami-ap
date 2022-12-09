@@ -1,9 +1,8 @@
 <template>
-  <el-table
+  <base-table
       v-loading="loading"
       :data="orders"
-      class="orders-table"
-      ref="tableData">
+      class="orders-table">
     <el-table-column
         fixed
         prop="number"
@@ -67,10 +66,11 @@
         <order-info :order-number="scope.row.number"/>
       </template>
     </el-table-column>
-  </el-table>
+  </base-table>
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import OrderInfo from "@/components/pages/orders/components/OrderInfo";
 import {conditionsArray} from "@/utils/conditions";
 import phonePrepareHrefMixin from "@/mixins/phone-prepare-href.mixin";
@@ -78,7 +78,7 @@ import phonePrepareHrefMixin from "@/mixins/phone-prepare-href.mixin";
 export default {
   name: "orders-table",
   mixins: [phonePrepareHrefMixin],
-  components: {OrderInfo},
+  components: {OrderInfo, BaseTable},
   props: {
     orders: {type: Array},
     loading: {type: Boolean}

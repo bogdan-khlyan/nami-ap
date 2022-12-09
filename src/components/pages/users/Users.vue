@@ -18,10 +18,7 @@
       >Отправить сообщение</el-button>
     </div>
     <div class="users__table">
-      <el-table
-          :data="users"
-          style="width: 100%"
-      >
+      <base-table :data="users">
         <el-table-column type="selection" width="55" />
         <el-table-column width="60">
           <template #default="scope">
@@ -67,7 +64,7 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-      </el-table>
+      </base-table>
       <div class="base-pagination">
         <el-pagination
             layout="prev, pager, next, sizes, total"
@@ -85,12 +82,13 @@
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
 import MailingPopup from "@/components/pages/users/components/MailingPopup";
 
 export default {
   name: 'products',
-  components: { BaseUserAvatar, MailingPopup },
+  components: { BaseUserAvatar, MailingPopup, BaseTable },
   data() {
     return {
       loading: true,

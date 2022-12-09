@@ -1,10 +1,7 @@
 <template>
   <div :id="id"
        class="el-table-draggable">
-    <el-table
-        :data="data"
-        style="width: 100%"
-    >
+    <base-table :data="data">
       <el-table-column
           v-if="!disabled"
           width="50px"
@@ -13,16 +10,18 @@
         <el-icon :size="20"><rank/></el-icon>
       </el-table-column>
       <slot/>
-    </el-table>
+    </base-table>
   </div>
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import Sortable from "sortablejs";
 import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: 'el-table-draggable',
+  components: { BaseTable },
   props: {
     data: { type: Array },
     disabled: { type: Boolean, default: false }

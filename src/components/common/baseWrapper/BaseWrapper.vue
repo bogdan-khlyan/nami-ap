@@ -1,9 +1,13 @@
 <template>
-  <div class="base-wrapper">
+  <div class="base-wrapper"
+       :class="[
+           { 'base-wrapper__expand-sidebar': expandSidebar },
+           { 'base-wrapper__expanding': isExpanding }
+       ]">
     <div class="base-wrapper__sidebar">
-      <base-sidebar/>
+      <base-sidebar v-model:expand="expandSidebar"/>
     </div>
-    <div class="base-wrapper__main">
+    <div class="base-wrapper__main" ref="main">
       <div class="base-wrapper__header">
         <base-header/>
       </div>
@@ -27,10 +31,24 @@ export default {
   name: 'base-wrapper',
   mixins: [iconsMixin],
   components: { BaseHeader, BaseSidebar },
+  data() {
+    return {
+      expandSidebar: false,
+      isExpanding: false
+    }
+  },
+  watch: {
+    expandSidebar() {
+      this.isExpanding = true
+      setTimeout(() => {
+        this.isExpanding = false
+      }, 1000)
+    }
+  },
   created() {
     this.$categories.getCategories()
         .catch(error => {
-          if (error.response.status === 401) { // TODO move to interceptors
+          if (error.response.status === 401 || error.response.status === 403) { // TODO move to interceptors
             this.$router.push('/login')
           }
         })
@@ -41,24 +59,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.base-wrapper__expanding {
+  :deep(.base-table .el-table) {
+    display: none;
+  }
+  :deep(.base-table__loading) {
+    display: block;
+  }
+}
 .base-wrapper {
   display: flex;
+
+  &__expand-sidebar {
+    :deep(.base-wrapper__main) {
+      width: calc(100vw - 294px);
+    }
+  }
 
   &__header {
     height: 56px;
   }
 
   &__main {
+    margin-left: auto;
     display: flex;
-    width: 100%;
-  }
-
-  &__sidebar {
-    min-width: 84px;
-    width: 84px;
-    //@media screen and (max-width: 768px) {
-    //
-    //}
+    width: calc(100vw - 84px);
+    transition-duration: 300ms;
   }
 
   &__content {
