@@ -31,40 +31,25 @@
             />
           </template>
         </el-table-column>
-        <el-table-column width="50">
+        <el-table-column width="60">
           <template #default="scope">
-            <el-tooltip
-                class="box-item"
-                effect="dark"
-                content="Редактировать"
-                placement="left-start"
-            >
-              <div @click="openModal(scope.row)"
-                   class="categories__wrap-edit-icon"
-              >
-                <el-icon color="white">
-                  <Edit/>
-                </el-icon>
-              </div>
-            </el-tooltip>
-
+            <el-button
+                type="primary" icon="edit"
+                @click="openModal(scope.row)"
+            />
           </template>
         </el-table-column>
-        <el-table-column width="50">
+        <el-table-column width="60">
           <template #default="scope">
             <el-popconfirm
                 title="Хотите удалить категорию?"
+                width="240px"
                 confirm-button-text="Да"
                 cancel-button-text="Нет"
                 @confirm="onDeleteCategory(scope.row)"
             >
               <template #reference>
-                <div class="categories__wrap-delete-icon"
-                >
-                  <el-icon color="white">
-                    <delete/>
-                  </el-icon>
-                </div>
+                <el-button type="danger" icon="delete"/>
               </template>
             </el-popconfirm>
 
