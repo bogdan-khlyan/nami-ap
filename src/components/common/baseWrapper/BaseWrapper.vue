@@ -33,12 +33,17 @@ export default {
   components: { BaseHeader, BaseSidebar },
   data() {
     return {
-      expandSidebar: false,
+      expandSidebar: !!localStorage.getItem('sidebar-expand'),
       isExpanding: false
     }
   },
   watch: {
-    expandSidebar() {
+    expandSidebar(value) {
+      if (value) {
+        localStorage.setItem('sidebar-expand', 'true')
+      } else {
+        localStorage.removeItem('sidebar-expand')
+      }
       this.isExpanding = true
       setTimeout(() => {
         this.isExpanding = false

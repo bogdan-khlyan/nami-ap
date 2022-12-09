@@ -1,13 +1,13 @@
 <template>
   <div class="base-sidebar"
        :class="{ 'base-sidebar__expand': expand }">
-    <div class="base-sidebar__logo">
-      <logo-vertical-icon/>
-    </div>
     <div class="base-sidebar__btn-collapse">
       <button @click="changeExpand">
         <icon-arrow/>
       </button>
+    </div>
+    <div class="base-sidebar__logo">
+      <logo-vertical-icon/>
     </div>
     <hr>
     <div class="base-sidebar__menu">
@@ -71,7 +71,13 @@ export default {
 
   &__expand {
     .base-sidebar__btn-collapse {
+      top: 25px;
+      left: unset;
+      right: 15px;
       transform: rotate(180deg);
+    }
+    .base-sidebar__logo {
+      height: 60px;
     }
     .base-sidebar__menu--item {
       width: 270px;
@@ -93,15 +99,25 @@ export default {
   }
 
   &__logo {
+    width: 100%;
+    height: 100px;
     padding-bottom: 6px;
+    transition-duration: 300ms;
     :deep(svg) {
+      position: absolute;
+      top: 5px;
+      left: 15px;
       display: block;
-      margin: 8px auto;
     }
   }
 
   &__btn-collapse {
-    margin: 0 auto 19px auto;
+    position: absolute;
+    top: 75px;
+    //left: 0;
+    right: 30px;
+    //margin: auto;
+    //margin: 0 auto 19px auto;
     width: max-content;
     transition-duration: 300ms;
     > button {
