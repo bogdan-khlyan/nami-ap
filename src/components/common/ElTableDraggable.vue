@@ -50,7 +50,7 @@ export default {
       this.sortable = Sortable.create(tbody, {
         draggable: `#${this.id} .el-table__row`,
         animation: 150,
-        onEnd: ($event) => this.$emit('drop', $event)
+        onEnd: ($event) => this.$emit('drop-el', $event)
       })
     }
   }

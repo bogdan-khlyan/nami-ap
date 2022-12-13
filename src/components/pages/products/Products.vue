@@ -29,13 +29,26 @@
           @click="exportProducts"
       >Экспорт</el-button>
     </div>
-    <div class="products__table">
+    <div class="products__table"
+         ref="tableWrapper">
       <el-table-draggable
           :data="productsFiltered"
           :disabled="disabledDraggable"
-          :key="disabledDraggable"
-          @drop="drop"
+          :key="tableKey"
+          @drop-el="drop"
       >
+        <el-table-column
+            width="80px"
+        >
+          <template v-slot="scope">
+            <img v-if="scope.row.type === 'SINGLE'"
+                 :src="scope.row.images?.[0]?.link" alt=""
+                 style="width: 60px;height: 60px;object-fit: contain">
+            <img v-else
+                 :src="`/api/product/variant/image/${scope.row.variants?.[0]?.image}`" alt=""
+                 style="width: 60px;height: 60px;object-fit: contain">
+          </template>
+        </el-table-column>
         <el-table-column
             property="title"
             label="Наименование"
@@ -133,7 +146,8 @@ export default {
         title: null,
         category: null,
         onlyActive: true
-      }
+      },
+      tableKey: 0
     }
   },
   computed: {
@@ -143,7 +157,7 @@ export default {
     disabledProductIds() {
       if (this.selectedCategory) {
         return this.selectedCategory.productIds
-            .filter(productId => this.products.find(item => item._id === productId)?.visible)
+            .filter(productId => !this.products.find(item => item._id === productId)?.visible)
       }
     },
     selectedCategory() {
@@ -179,16 +193,30 @@ export default {
       return filtered
     }
   },
+  watch: {
+    disabledDraggable() {
+      ++this.tableKey
+    }
+  },
   created() {
     this.$products.getProducts()
     this.$categories.getCategories()
   },
   methods: {
     drop({ newIndex, oldIndex }) {
+      const height = this.$refs.tableWrapper.offsetHeight
+      this.$refs.tableWrapper.style.height = `${height}px`
       const ids = this.productsFiltered.map(item => item._id)
       const current = ids.splice(oldIndex, 1)[0]
       ids.splice(newIndex, 0, current)
-      console.log(ids)
+      ids.push(...this.disabledProductIds)
+      this.$categories.updateCategory({
+        _id: this.filters.category,
+        productIds: ids
+      }).then(() => {
+        ++this.tableKey
+        setTimeout(() => this.$refs.tableWrapper.style.height = `auto`, 300)
+      })
     },
     exportProducts() {
       exportProducts(
