@@ -5,7 +5,7 @@
           v-model="filters.phone"
           placeholder="Поиск по телефону"
           clearable
-          disabled
+          @input="getUsersPage(1)"
       />
       <el-checkbox
           v-model="filters.onlyRegistered"
@@ -127,7 +127,8 @@ export default {
       const { total, data } = await this.$users.getUsers(
           this.pagination.page,
           this.pagination.limit,
-          this.filters.onlyRegistered ? 'USER' : null
+          this.filters.onlyRegistered ? 'USER' : null,
+          this.filters.phone ? this.filters.phone : null
       )
       this.users = data
       this.total = total
