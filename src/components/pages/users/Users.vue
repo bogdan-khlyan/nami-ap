@@ -64,6 +64,25 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
+        <el-table-column
+            property="ordersCount"
+            label="Кол-во заказов"
+            width="auto"
+            sortable
+        >-</el-table-column>
+        <el-table-column width="80">
+          <template #default="scope">
+            <el-tooltip
+                class="box-item" effect="dark"
+                content="Список заказов пользователя" placement="top"
+            >
+              <el-button
+                  type="primary" icon="memo"
+                  @click="$router.push(`/orders?phone=${encodeURIComponent(scope.row.phone)}`)"
+              />
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </base-table>
       <div class="base-pagination">
         <el-pagination

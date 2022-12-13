@@ -58,9 +58,6 @@ import {conditionsArray} from "@/utils/conditions"
 export default {
   name: "orders",
   components: {OrdersTable, Pagination},
-  mounted() {
-    this.getOrders()
-  },
   data() {
     return {
       loading: false,
@@ -82,6 +79,12 @@ export default {
         total: 0
       }
     }
+  },
+  created() {
+    if (this.$route.query.phone) {
+      this.filters.phone = this.$route.query.phone
+    }
+    this.getOrders()
   },
   methods: {
     onChangePagination(event) {
