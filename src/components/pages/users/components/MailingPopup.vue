@@ -2,8 +2,13 @@
   <base-popup
       class="resource-popup"
       title="SMS-рассылка"
+      width="400px"
+      button-text="Отправить"
       ref="basePopup"
   >
+    <template v-slot:icon>
+      <el-icon><Promotion/></el-icon>
+    </template>
     <base-label>
       <el-input
           v-model="message"
