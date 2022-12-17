@@ -18,7 +18,10 @@
       >Отправить сообщение</el-button>
     </div>
     <div class="users__table">
-      <base-table :data="users">
+      <base-table
+          :data="users"
+          @selection-change="selectionChange"
+      >
         <el-table-column type="selection" width="55" />
         <el-table-column width="60">
           <template #default="scope">
@@ -96,7 +99,10 @@
         />
       </div>
     </div>
-    <mailing-popup ref="mailingPopup"/>
+    <mailing-popup
+        :selected-users="selectedUsers"
+        ref="mailingPopup"
+    />
   </div>
 </template>
 
@@ -116,6 +122,7 @@ export default {
         onlyRegistered: false
       },
       users: [],
+      selectedUsers: [],
       total: 0,
       pagination: {
         page: 1,
@@ -127,6 +134,9 @@ export default {
     this.getUsersPage(1)
   },
   methods: {
+    selectionChange(selected) {
+      this.selectedUsers = selected
+    },
     openMailingPopup() {
       this.$refs.mailingPopup.open()
     },

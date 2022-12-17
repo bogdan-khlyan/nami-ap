@@ -1,6 +1,9 @@
 <template>
   <div class="base-table">
-    <el-table :data="data">
+    <el-table
+        :data="data"
+        @selection-change="$emit('selection-change', $event)"
+    >
       <slot/>
     </el-table>
     <div v-loading="true"
