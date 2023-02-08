@@ -24,12 +24,31 @@
           type="primary" icon="plus"
           @click="$router.push('/products/create')"
       >Добавить продукт</el-button>
+      <el-button
+          type="warning" icon="document"
+          @click="exportProducts"
+      >Экспорт</el-button>
     </div>
-    <div class="products__table">
-      <el-table
+    <div class="products__table"
+         ref="tableWrapper">
+      <el-table-draggable
           :data="productsFiltered"
-          style="width: 100%"
+          :disabled="disabledDraggable"
+          :key="tableKey"
+          @drop-el="drop"
       >
+        <el-table-column
+            width="80px"
+        >
+          <template v-slot="scope">
+            <img v-if="scope.row.type === 'SINGLE'"
+                 :src="scope.row.images?.[0]?.link" alt=""
+                 style="width: 60px;height: 60px;object-fit: contain">
+            <img v-else
+                 :src="`/api/product/variant/image/${scope.row.variants?.[0]?.image}`" alt=""
+                 style="width: 60px;height: 60px;object-fit: contain">
+          </template>
+        </el-table-column>
         <el-table-column
             property="title"
             label="Наименование"
@@ -105,18 +124,21 @@
             />
           </template>
         </el-table-column>
-      </el-table>
+      </el-table-draggable>
     </div>
   </div>
 </template>
 
 <script>
+import ElTableDraggable from "@/components/common/ElTableDraggable";
 import productsMixin from "@/api/products/products.mixin";
 import categoriesMixin from "@/api/categories/categories.mixin";
+import {exportProducts} from "@/utils/export-products";
 
 export default {
   name: 'products',
   mixins: [categoriesMixin, productsMixin],
+  components: { ElTableDraggable },
   data() {
     return {
       loading: null,
@@ -124,10 +146,20 @@ export default {
         title: null,
         category: null,
         onlyActive: true
-      }
+      },
+      tableKey: 0
     }
   },
   computed: {
+    disabledDraggable() {
+      return !this.filters.onlyActive || !this.selectedCategory || !!this.filters.title
+    },
+    disabledProductIds() {
+      if (this.selectedCategory) {
+        return this.selectedCategory.productIds
+            .filter(productId => !this.products.find(item => item._id === productId)?.visible)
+      }
+    },
     selectedCategory() {
       if (this.filters.category) {
         return this.categories
@@ -141,8 +173,15 @@ export default {
             .filter(product => product.visible)
       }
       if (this.filters.category) {
-        filtered = filtered
-            .filter(product => !!this.selectedCategory.productIds.find(productId => productId === product._id))
+        const temp = []
+        this.selectedCategory.productIds
+            .forEach(productId => {
+              const product = filtered.find(item => item._id === productId)
+              if (product) {
+                temp.push(product)
+              }
+            })
+        filtered = temp
       }
       if (this.filters.title) {
         filtered = filtered.filter(product =>
@@ -154,15 +193,44 @@ export default {
       return filtered
     }
   },
+  watch: {
+    disabledDraggable() {
+      ++this.tableKey
+    }
+  },
   created() {
     this.$products.getProducts()
     this.$categories.getCategories()
   },
   methods: {
+    drop({ newIndex, oldIndex }) {
+      const height = this.$refs.tableWrapper.offsetHeight
+      this.$refs.tableWrapper.style.height = `${height}px`
+      const ids = this.productsFiltered.map(item => item._id)
+      const current = ids.splice(oldIndex, 1)[0]
+      ids.splice(newIndex, 0, current)
+      ids.push(...this.disabledProductIds)
+      this.$categories.updateCategory({
+        _id: this.filters.category,
+        productIds: ids
+      }).then(() => {
+        ++this.tableKey
+        setTimeout(() => this.$refs.tableWrapper.style.height = `auto`, 300)
+      })
+    },
+    exportProducts() {
+      exportProducts(
+          this.products.filter(item => item.visible),
+          this.categories
+      )
+    },
     updateProductStatus(product) {
       this.loading = product._id
       this.$products.updateProduct(product._id, product.type, { visible: product.visible })
-          .then(() => this.loading = null)
+          .then(() => {
+            this.loading = null
+            this.$message.success({ message: 'Статус успешно изменен' })
+          })
     }
   }
 }

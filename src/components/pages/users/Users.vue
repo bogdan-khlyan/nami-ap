@@ -5,7 +5,7 @@
           v-model="filters.phone"
           placeholder="Поиск по телефону"
           clearable
-          disabled
+          @input="getUsersPage(1)"
       />
       <el-checkbox
           v-model="filters.onlyRegistered"
@@ -14,13 +14,13 @@
       <el-button
           class="users__header--btn"
           type="primary" icon="promotion"
-          disabled
+          @click="openMailingPopup"
       >Отправить сообщение</el-button>
     </div>
     <div class="users__table">
-      <el-table
+      <base-table
           :data="users"
-          style="width: 100%"
+          @selection-change="selectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column width="60">
@@ -67,26 +67,53 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-      </el-table>
+        <el-table-column
+            property="ordersCount"
+            label="Кол-во заказов"
+            width="auto"
+            sortable
+        >-</el-table-column>
+        <el-table-column width="80">
+          <template #default="scope">
+            <el-tooltip
+                class="box-item" effect="dark"
+                content="Список заказов пользователя" placement="top"
+            >
+              <el-button
+                  type="primary" icon="memo"
+                  @click="$router.push(`/orders?phone=${encodeURIComponent(scope.row.phone)}`)"
+              />
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </base-table>
       <div class="base-pagination">
         <el-pagination
-            layout="prev, pager, next"
+            layout="prev, pager, next, sizes, total"
             background
             :total="total"
-            :page-size="20"
+            :page-sizes="[20, 50, 100, 200, 500, 1000]"
+            :page-size="pagination.limit"
             @current-change="changePage"
+            @size-change="changeSize"
         />
       </div>
     </div>
+    <mailing-popup
+        :selected-users="selectedUsers"
+        ref="mailingPopup"
+    />
   </div>
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import BaseUserAvatar from "@/components/common/BaseUserAvatar";
+import MailingPopup from "@/components/pages/users/components/MailingPopup";
 
 export default {
   name: 'products',
-  components: { BaseUserAvatar },
+  components: { BaseUserAvatar, MailingPopup, BaseTable },
   data() {
     return {
       loading: true,
@@ -95,22 +122,43 @@ export default {
         onlyRegistered: false
       },
       users: [],
-      total: 0
+      selectedUsers: [],
+      total: 0,
+      pagination: {
+        page: 1,
+        limit: 20
+      }
     }
   },
   created() {
     this.getUsersPage(1)
   },
   methods: {
+    selectionChange(selected) {
+      this.selectedUsers = selected
+    },
+    openMailingPopup() {
+      this.$refs.mailingPopup.open()
+    },
     changePage(page) {
-      this.getUsersPage(page)
+      this.pagination.page = page
+      this.getUsersPage()
+    },
+    changeSize(size) {
+      this.pagination.limit = size
+      this.getUsersPage()
     },
     changeOnlyRegistered() {
       this.getUsersPage(1)
     },
-    async getUsersPage(page) {
+    async getUsersPage() {
       this.loading = true
-      const { total, data } = await this.$users.getUsers(page, 20, this.filters.onlyRegistered ? 'CUSTOMER' : null)
+      const { total, data } = await this.$users.getUsers(
+          this.pagination.page,
+          this.pagination.limit,
+          this.filters.onlyRegistered ? 'USER' : null,
+          this.filters.phone ? this.filters.phone : null
+      )
       this.users = data
       this.total = total
       this.loading = false

@@ -3,9 +3,17 @@
     <div class="orders__filters">
       <el-input
           class="orders__filters--item"
+          v-model="filters.username"
+          placeholder="Поиск имени пользователя"
+          clearable
+          @input="getOrders"
+      />
+      <el-input
+          class="orders__filters--item"
           v-model="filters.phone"
           placeholder="Поиск по номеру телефона"
-          disabled
+          clearable
+          @input="getOrders"
       />
       <el-input
           class="orders__filters--item"
@@ -50,9 +58,6 @@ import {conditionsArray} from "@/utils/conditions"
 export default {
   name: "orders",
   components: {OrdersTable, Pagination},
-  mounted() {
-    this.getOrders()
-  },
   data() {
     return {
       loading: false,
@@ -60,6 +65,7 @@ export default {
       conditions: conditionsArray,
 
       filters: {
+        username: null,
         phone: '',
         address: '',
         condition: null
@@ -74,6 +80,12 @@ export default {
       }
     }
   },
+  created() {
+    if (this.$route.query.phone) {
+      this.filters.phone = this.$route.query.phone
+    }
+    this.getOrders()
+  },
   methods: {
     onChangePagination(event) {
       this.pagination = event
@@ -83,7 +95,7 @@ export default {
       this.loading = true
 
       const { data, total } = await this.$orders
-          .getOrders(this.pagination.limit, this.pagination.page, this.filters.condition)
+          .getOrders(this.pagination.limit, this.pagination.page, this.filters.condition, this.filters.phone, this.filters.username)
 
       this.pagination.total = total
       this.orders = data.map(item => {

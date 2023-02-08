@@ -1,12 +1,14 @@
 import {http} from "@/api/axios.config";
 
 export default () => ({
-    async getOrders(limit = 10, page = 1, condition) {
+    async getOrders(limit = 10, page = 1, condition, phone, name) {
         try {
             const query = {
                 limit,
                 page,
-                fCondition: condition ? condition : null
+                fCondition: condition ? condition : null,
+                mPhone: phone ? phone : null,
+                mUsername: name ? name : null
             }
             return await http.get('/api/admin/orders', { params: query })
         } catch (error) {

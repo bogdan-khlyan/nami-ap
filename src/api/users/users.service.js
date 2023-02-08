@@ -1,13 +1,14 @@
 import {http} from "@/api/axios.config";
 
 export default () => ({
-    async getUsers(page, limit = 20, role) {
+    async getUsers(page, limit = 20, role, phone) {
         try {
             return await http.get('/api/admin/users', {
                 params: {
                     page: page,
                     limit: limit,
-                    fRole: role
+                    fRole: role,
+                    mPhone: phone
                 }
             })
         } catch (error) {

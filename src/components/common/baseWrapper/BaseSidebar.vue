@@ -1,12 +1,13 @@
 <template>
-  <div class="base-sidebar">
-    <div class="base-sidebar__logo">
-      <logo-vertical-icon/>
-    </div>
+  <div class="base-sidebar"
+       :class="{ 'base-sidebar__expand': expand }">
     <div class="base-sidebar__btn-collapse">
-      <button>
+      <button @click="changeExpand">
         <icon-arrow/>
       </button>
+    </div>
+    <div class="base-sidebar__logo">
+      <logo-vertical-icon/>
     </div>
     <hr>
     <div class="base-sidebar__menu">
@@ -16,6 +17,7 @@
           :to="item.to"
       >
         <component :is="item.icon"/>
+        <span>{{ item.title }}</span>
       </router-link>
     </div>
   </div>
@@ -44,13 +46,12 @@ export default {
   },
   data () {
     return {
-      drawer: true,
       items: links
     }
   },
   methods: {
-    changeExpand(value) {
-      this.$emit('update:expand', value)
+    changeExpand() {
+      this.$emit('update:expand', !this.expand)
     }
   }
 }
@@ -58,30 +59,67 @@ export default {
 
 <style lang="scss" scoped>
 .base-sidebar {
-  z-index: 10;
+  z-index: 2001;
   position: fixed;
-  width: 84px;
+  min-width: 84px;
   min-height: 100vh;
   background-color: #11162B;
+  transition-duration: 600ms;
+  overflow: hidden;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  &__expand {
+    .base-sidebar__btn-collapse {
+      top: 25px;
+      left: unset;
+      right: 15px;
+      transform: rotate(180deg);
+    }
+    .base-sidebar__logo {
+      height: 60px;
+    }
+    .base-sidebar__menu--item {
+      width: 270px;
+      > span {
+        opacity: 1;
+      }
+    }
+    hr {
+      width: 240px!important;
+    }
+  }
 
   > hr {
     width: 36px;
     height: 1px;
     border: none;
-    background-color: rgba(255, 255, 255, 0.2);;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition-duration: 300ms;
   }
 
   &__logo {
+    width: 100%;
+    height: 100px;
     padding-bottom: 6px;
+    transition-duration: 300ms;
     :deep(svg) {
+      position: absolute;
+      top: 5px;
+      left: 15px;
       display: block;
-      margin: 8px auto;
     }
   }
 
   &__btn-collapse {
-    margin: 0 auto 19px auto;
+    position: absolute;
+    top: 75px;
+    //left: 0;
+    right: 30px;
+    //margin: auto;
+    //margin: 0 auto 19px auto;
     width: max-content;
+    transition-duration: 300ms;
     > button {
       display: flex;
       justify-content: center;
@@ -92,15 +130,18 @@ export default {
       border: none;
       border-radius: 50%;
 
-      cursor: no-drop;
+      cursor: pointer;
     }
   }
 
   &__menu {
     &--item {
+      position: relative;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
+      padding-left: 16px;
+      padding-right: 16px;
       margin: 8px auto;
       width: 60px;
       height: 52px;
@@ -108,18 +149,22 @@ export default {
       border-radius: 10px;
 
       transition-duration: 300ms;
+      > span {
+        position: absolute;
+        left: 60px;
+        font-family: 'Ubuntu', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+        color: #FFFFFF;
+        opacity: 0;
+        transition-duration: 300ms;
+      }
       &:hover, &.router-link-active {
         background-color: #1857F3;
       }
     }
   }
-  //:deep(.el-menu-item) {
-  //  .el-icon {
-  //    font-size: 20px;
-  //  }
-  //  > span {
-  //    font-size: 16px;
-  //  }
-  //}
 }
 </style>

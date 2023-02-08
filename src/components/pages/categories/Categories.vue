@@ -8,7 +8,7 @@
       >Создать категорию</el-button>
     </div>
     <div class="categories__table">
-      <el-table
+      <base-table
           :data="categories"
           style="width: 100%"
       >
@@ -31,46 +31,31 @@
             />
           </template>
         </el-table-column>
-        <el-table-column width="50">
+        <el-table-column width="60">
           <template #default="scope">
-            <el-tooltip
-                class="box-item"
-                effect="dark"
-                content="Редактировать"
-                placement="left-start"
-            >
-              <div @click="openModal(scope.row)"
-                   class="categories__wrap-edit-icon"
-              >
-                <el-icon color="white">
-                  <Edit/>
-                </el-icon>
-              </div>
-            </el-tooltip>
-
+            <el-button
+                type="primary" icon="edit"
+                @click="openModal(scope.row)"
+            />
           </template>
         </el-table-column>
-        <el-table-column width="50">
+        <el-table-column width="60">
           <template #default="scope">
             <el-popconfirm
                 title="Хотите удалить категорию?"
+                width="240px"
                 confirm-button-text="Да"
                 cancel-button-text="Нет"
                 @confirm="onDeleteCategory(scope.row)"
             >
               <template #reference>
-                <div class="categories__wrap-delete-icon"
-                >
-                  <el-icon color="white">
-                    <delete/>
-                  </el-icon>
-                </div>
+                <el-button type="danger" icon="delete"/>
               </template>
             </el-popconfirm>
 
           </template>
         </el-table-column>
-      </el-table>
+      </base-table>
     </div>
 
     <modal-category @onCloseModal="isShowModal=false"
@@ -81,12 +66,13 @@
 </template>
 
 <script>
+import BaseTable from "@/components/common/BaseTable";
 import categoriesMixin from "@/api/categories/categories.mixin";
 import ModalCategory from "@/components/pages/categories/components/ModalCategory";
 
 export default {
   name: 'categories',
-  components: {ModalCategory},
+  components: { ModalCategory, BaseTable },
   mixins: [categoriesMixin],
   data() {
     return {
